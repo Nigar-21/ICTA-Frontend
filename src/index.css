@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+.react-calendar {
+  width: 100%;
+  border: none; /* xarici border silindi */
+  border-radius: 0.75rem;
+  background-color: white;
+  color: #1E3A8A; /* əsas text rəngi */
+  font-family: inherit;
+}
+
+.react-calendar__navigation {
+  color: #1E3A8A; /* Ay və arrow rəngi */
+}
+
+.react-calendar__month-view__weekdays {
+  color: #555; /* həftənin günləri */
+  font-weight: 500;
+}
+
+.react-calendar__tile {
+  border: none; /* tile border silindi */
+  border-radius: 0.5rem;
+  background-color: white !important;
+  color: #1E3A8A !important; /* date rəngi */
+  transition: all 0.3s;
+}
+
+.react-calendar__tile:hover {
+  background-color: #eef2ff !important; /* hover rəngi */
+  color: #1E3A8A !important;
+}
+
+.react-calendar__tile--active {
+  background-color: #1E3A8A !important; /* seçilmiş date */
+  color: white !important;
+}

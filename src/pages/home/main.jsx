@@ -3,16 +3,53 @@ import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { FaFilePdf, FaVideo, FaQuestionCircle, FaRegFileAlt, FaBook, FaLaptopCode } from "react-icons/fa"; 
 import { useNavigate } from "react-router-dom";
+import News from "../../components/News"
+import About from '../../components/About'
+import Team from '../../components/Team'
+import Contact from '../../components/Contact'
+import ComplaintSuggestion from '../../components/Feedback'
+
 export default function Main() {
     
-    const services = [
-    { title: "PDF Təlimatlar", icon: FaFilePdf, route: "/pdf" },
-    { title: "Video Təlimatlar", icon: FaVideo, route: "/video" },
-    { title: "Quizlər", icon: FaQuestionCircle, route: "/quiz" },
-    { title: "Müraciət qaydaları", icon: FaRegFileAlt, route: "/rules" },
-    { title: "Siyasətlər", icon: FaBook, route: "/policies" },
-    { title: "Daxili IT qaydaları", icon: FaLaptopCode, route: "/it-guidelines" },
-  ];
+ const services = [
+  { 
+    title: "PDF Təlimatlar", 
+    icon: FaFilePdf, 
+    route: "/pdf",
+    description: "Asanlıqla yükləyə biləcəyiniz və oxuya biləcəyiniz PDF formatında təlimatlar."
+  },
+  { 
+    title: "Video Təlimatlar", 
+    icon: FaVideo, 
+    route: "/video",
+    description: "Addım-addım izah edən video dərslərlə prosesləri öyrənin."
+  },
+  { 
+    title: "Quizlər", 
+    icon: FaQuestionCircle, 
+    route: "/quiz",
+    description: "Biliklərinizi sınayın və öyrəndiklərinizi möhkəmləndirin."
+  },
+  { 
+    title: "Müraciət qaydaları", 
+    icon: FaRegFileAlt, 
+    route: "/rules",
+    description: "Rəsmi müraciət prosedurlarını və lazım olan addımları öyrənin."
+  },
+  { 
+    title: "Siyasətlər", 
+    icon: FaBook, 
+    route: "/policies",
+    description: "Şirkət və ya təşkilatın əsas siyasətləri və qaydaları haqqında məlumat."
+  },
+  { 
+    title: "Daxili IT qaydaları", 
+    icon: FaLaptopCode, 
+    route: "/it-guidelines",
+    description: "İT istifadə qaydaları, təhlükəsizlik və daxili protokollar barədə tövsiyələr."
+  },
+];
+
 
   const meetings = [
   { date: '2025-10-09', time: '06:00 - 07:00', place: 'Ofis' },
@@ -90,13 +127,13 @@ const filteredMeetings = meetings
     {services.map((service, index) => (
       <div  onClick={() => navigate(service.route)} 
         key={index}
-        className="bg-white rounded-2xl p-6 h-[200px] hover:bg-[#eef2ff] transition-all duration-300 shadow-xl flex flex-col justify-center items-start cursor-pointer border border-[#e5e7eb] relative overflow-visible"
+        className="bg-white rounded-2xl p-6 h-[250px] hover:bg-[#eef2ff] transition-all duration-300 shadow-xl flex flex-col justify-center items-start cursor-pointer border border-[#e5e7eb] relative overflow-visible"
       >
         <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-[#dce9ff] shadow-sm">
           <service.icon className="text-3xl text-[#1E3A8A]" />
         </div>
         <h3 className="text-xl font-semibold">{service.title}</h3>
-
+      <p className="text-gray-500 mt-2 text-sm w-[80%] ">{service.description}</p>
     
         <div      className="absolute bottom-10 right-4 w-8 h-8 flex items-center justify-center bg-[#1E3A8A] text-white rounded-full shadow-lg cursor-pointer ">
           <svg
@@ -155,6 +192,13 @@ const filteredMeetings = meetings
         )}
       </div>
     </section>
+
+        <News/>
+        <About/>
+        <Team/>
+        <Contact/>
+        <ComplaintSuggestion/>
+
 </>
   )
 }

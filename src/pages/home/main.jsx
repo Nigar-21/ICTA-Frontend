@@ -10,6 +10,8 @@ import Contact from '../../components/Contact'
 import ComplaintSuggestion from '../../components/Feedback'
 
 export default function Main() {
+
+    const navigate = useNavigate(); 
     
  const services = [
   { 
@@ -168,9 +170,13 @@ const filteredMeetings = meetings
           <h3 className="text-[24px] font-semibold text-black">
             Seçilmiş tarix: {selectedDate.toLocaleDateString()}
           </h3>
-          <button className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition font-medium">
-            Yeni Görüş
-          </button>
+        <button
+  onClick={() => navigate("/calendar", { state: { selectedDate } })}
+  className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition font-medium"
+>
+  Yeni Görüş
+</button>
+
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -183,20 +189,26 @@ const filteredMeetings = meetings
           ))}
         </div>
 
-        {filteredMeetings.length > 0 && (
-          <div className="mt-2 flex justify-end">
-            <button className="px-4 py-2 bg-gray-200 text-[#1E3A8A] font-medium rounded-full hover:bg-gray-300 transition cursor-pointer">
-              Bütün Görüşlər
-            </button>
-          </div>
-        )}
+     {filteredMeetings.length > 0 && (
+  <div className="mt-2 flex justify-end">
+    <button
+      onClick={() =>
+        navigate("/calendar", { state: { selectedDate } }) 
+      }
+      className="px-4 py-2 bg-gray-200 text-[#1E3A8A] font-medium rounded-full hover:bg-gray-300 transition cursor-pointer"
+    >
+      Bütün Görüşlər
+    </button>
+  </div>
+)}
+
       </div>
     </section>
 
         <News/>
         <About/>
         <Team/>
-        <Contact/>
+        
         <ComplaintSuggestion/>
 
 </>

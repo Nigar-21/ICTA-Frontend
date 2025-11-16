@@ -4,23 +4,31 @@ import Logo from '../assets/icta-logo.png'
 export default function Header() {
     const navLinks = [
     { name: "Ana səhifə", to: "/" },
-       { name: "Yeniliklər", 
+       { name: "Yeniliklər", to: "/news", 
       dropdown: [
         { name: "Xəbərlər", to: "/xeberler" },
         { name: "Məqalələr", to: "/meqaleler" },
         { name: "Elanlar", to: "/elanlar" }
       ]},
-      { name: "Haqqımızda", 
+       {
+      name: "Haqqımızda",
       dropdown: [
-        { name: "Şöbə haqqında", to: "/haqqimizda" },
-        { name: "Əsasnamə", to: "/esasname" },
-        { name: "Struktur", to: "/struktur" },
-        { name: "Müraciət qaydaları", to: "/muraciet-qaydalari" }
-      ]},
+        { name: "Şöbə haqqında", to: "/about?tab=sobe" },
+        { name: "Əsasnamə", to: "/about?tab=esasname" },
+        { name: "Struktur", to: "/about?tab=struktur" },
+        { name: "Müraciət qaydaları", to: "/about?tab=muraciet" },
+      ]
+    },
     { name: "Əlaqə", to: "/contact" },
     { name: "Kalendar", to: "/calendar" },
     { name: "FAQ", to: "/faq" },
-    { name: "Nömrə siyahısı", to: "/numbers" },
+    { name: "Təlimlər", to: "/training",
+      dropdown: [
+        { name: "Video təlimlər", to: "/videos" },
+        { name: "Təlimatlar", to: "/instructions" },
+        { name: "Quizlər", to: "/quizzes" }
+      ]
+    },
   ];
 
   return (
@@ -33,7 +41,11 @@ export default function Header() {
           <div key={index} className="relative group">
             {link.dropdown ? (
               <>
-                <span className="cursor-pointer transition-colors duration-200 hover:bg-[#1E3A8A] py-2 px-4  hover:shadow-xl rounded-full ">{link.name}</span>
+              <Link    
+                to={link.to} 
+              className="cursor-pointer transition-colors duration-200 hover:bg-[#1E3A8A] py-2 px-4  hover:shadow-xl rounded-full ">
+              {link.name}
+              </Link>
                 <div className="absolute left-0 top-full mt-2 w-52 bg-white rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 invisible group-hover:visible hover:shadow-xl transition-all duration-300 z-10">
                   {link.dropdown.map((item, idx) => (
                     <Link

@@ -1,50 +1,93 @@
-import React from "react";
-import ServerImage from "../assets/ITPhoto.png"; 
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import ServerImage from "../assets/ITPhoto.png";
+import SobeImage from "../assets/data.jpg";
+import EsasnameImage from "../assets/ai.jpg";
+import StrukturImage from "../assets/comp.jpg";
+import MuracietImage from "../assets/network.jpg";
 
 export default function About() {
+  const [activeTab, setActiveTab] = useState("sobe"); // default tab
+
+  const tabs = [
+    { name: "Şöbə haqqında", key: "sobe" },
+    { name: "Əsasnamə", key: "esasname" },
+    { name: "Struktur", key: "struktur" },
+    { name: "Müraciət qaydaları", key: "muraciet" },
+  ];
+
+  const renderContent = () => {
+    switch(activeTab) {
+      case "sobe":
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <img src={SobeImage} alt="Şöbə" className="w-[90%] h-[500px] object-cover rounded-2xl shadow-md"/>
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Şöbə haqqında məlumat</h2>
+              <p>- Şöbənin yaranma tarixi: 2010</p>
+              <p>- Görülən işlər: İT infrastrukturu, texniki dəstək, sistemlərin idarəsi</p>
+              <p>- Əlavə məlumat: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+          </div>
+        );
+      case "esasname":
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <img src={EsasnameImage} alt="Əsasnamə" className="w-[90%] h-[500px] object-cover rounded-2xl shadow-md"/>
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Əsasnamə</h2>
+              <p>- Əsasnamənin yazı forması və təsdiqi</p>
+              <p>- Təsdiq tarixi: 01.01.2025</p>
+            </div>
+          </div>
+        );
+      case "struktur":
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <img src={StrukturImage} alt="Struktur" className="w-[90%] h-[500px] object-cover rounded-2xl shadow-md"/>
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Şöbənin strukturu</h2>
+              <p>- Struktur təsdiq tarixi: 05.05.2025</p>
+            </div>
+          </div>
+        );
+      case "muraciet":
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <img src={MuracietImage} alt="Müraciət qaydaları" className="w-[90%] h-[500px] object-cover rounded-2xl shadow-md"/>
+            <div>
+              <h2 className="text-2xl font-bold mb-4">Müraciət qaydaları</h2>
+              <p>- Şöbəyə müraciət qaydaları</p>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="bg-white min-h-screen py-20 px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
-        
-        <div className="relative">
-          <img
-            src={ServerImage}
-            alt="Server otağı"
-            className="rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 w-full"
-          />
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-[#1E3A8A]/20 to-transparent"></div>
-        </div>
+      <div className="max-w-7xl mx-auto">
+      
 
-        <div>
-          <h1 className="text-4xl font-bold text-[#1E3A8A] mb-6">
-            Şöbə haqqında
-          </h1>
-          <p className="text-gray-700 text-lg leading-relaxed mb-8">
-            Şəbəkə inzibatçılığı və texniki dəstək şöbəsi — informasiya
-            texnologiyalarının etibarlı, təhlükəsiz və dayanıqlı şəkildə
-            idarə edilməsini təmin edən mühüm struktur bölmədir. Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit. Curabitur ut nisl nec
-            nulla fermentum tincidunt. Donec eget velit vel leo porttitor
-            vehicula. Proin ut libero ut massa pharetra vulputate. Nulla
-            facilisi. Donec sed mi in neque vehicula tincidunt eget sit amet
-            turpis. 
-          </p>
+        {/* Tab content */}
+        {renderContent()}
 
-        <div className="flex flex-nowrap gap-3">
-  <button className="bg-[#1E3A8A] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#162556] transition-all duration-300">
-    Şöbə haqqında
-  </button>
-  <button className="border border-[#1E3A8A] text-[#1E3A8A] px-6 py-3 rounded-full font-semibold hover:bg-[#1E3A8A] hover:text-white transition-all duration-300">
-    Əsasnamə
-  </button>
-  <button className="border border-[#1E3A8A] text-[#1E3A8A] px-6 py-3 rounded-full font-semibold hover:bg-[#1E3A8A] hover:text-white transition-all duration-300">
-    Struktur
-  </button>
-  <button className="border border-[#1E3A8A] text-[#1E3A8A] px-6 py-3 rounded-full font-semibold hover:bg-[#1E3A8A] hover:text-white transition-all duration-300">
-    Müraciət qaydaları
-  </button>
-</div>
+          {/* Tab düymələri */}
+        <div className="flex flex-wrap gap-4 mb-12 justify-end">
+          {tabs.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-6 py-3 rounded-2xl font-semibold transition-all duration-300 ${
+                activeTab === tab.key
+                  ? "text-white shadow-lg bg-[#1E3A8A]"
+                  : "border border-[#1E3A8A] text-[#1E3A8A] hover:shadow-md"
+              }`}
+            >
+              {tab.name}
+            </button>
+          ))}
         </div>
       </div>
     </div>

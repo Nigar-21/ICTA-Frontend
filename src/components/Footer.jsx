@@ -23,9 +23,9 @@ export default function Footer() {
 
     
         <div className="text-center md:text-left space-y-2">
-          <p className="text-sm sm:text-base font-medium">
+          {/* <p className="text-sm sm:text-base font-medium">
             <span className="font-semibold">Tarix:</span> {currentDate}
-          </p>
+          </p> */}
           <p className="text-sm sm:text-base font-medium">
             <span className="font-semibold">Otaq nömrəsi:</span> 208
           </p>

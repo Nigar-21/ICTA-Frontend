@@ -12,7 +12,7 @@ export default function About() {
     { name: "Şöbə haqqında", key: "sobe" },
     { name: "Əsasnamə", key: "esasname" },
     { name: "Struktur", key: "struktur" },
-    { name: "Müraciət qaydaları", key: "muraciet" },
+    
   ];
 
   const renderContent = () => {
@@ -50,16 +50,7 @@ export default function About() {
             </div>
           </div>
         );
-      case "muraciet":
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <img src={MuracietImage} alt="Müraciət qaydaları" className="w-[90%] h-[500px] object-cover rounded-2xl shadow-md"/>
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Müraciət qaydaları</h2>
-              <p>- Şöbəyə müraciət qaydaları</p>
-            </div>
-          </div>
-        );
+  
       default:
         return null;
     }

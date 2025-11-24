@@ -21,7 +21,7 @@ export default function About() {
     { name: "Şöbə haqqında", key: "sobe" },
     { name: "Əsasnamə", key: "esasname" },
     { name: "Struktur", key: "struktur" },
-    { name: "Müraciət qaydaları", key: "muraciet" },
+
   ];
 
   const renderContent = () => {
@@ -88,29 +88,7 @@ export default function About() {
           </div>
             </div>
         );
-      case "muraciet":
-        return (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <img
-        src={MuracietImage}
-        alt="Müraciət qaydaları"
-        className="w-[90%] h-[500px] object-cover rounded-2xl shadow-md"
-      />
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Müraciət qaydaları</h2>
-            <p>- Şöbəyə müraciət qaydaları</p>
-            <p>- Təsdiqlənmiş sənəd haqqında məlumat</p>
-            <a
-              href="/pdf/muraciet.pdf"
-              download="muraciet.pdf"
-              className="inline-block mt-4 px-4 py-2 text-white font-semibold rounded-2xl shadow-lg transition"
-              style={{ background: 'linear-gradient(180deg, #162556 0%, #2c3a7b 50%, #3b446f 100%)' }}
-            >
-              Sənəd yüklə
-            </a>
-          </div>
-            </div>
-        );
+   
       default:
         return <p>Şöbə haqqında məlumatlar...</p>;
     }
@@ -142,17 +120,20 @@ export default function About() {
   return (
     <div className="bg-white min-h-screen">
       {/* Şöbə cover */}
-      <div className="relative w-full h-[250px]">
-        <img
-          src={ServerImage}
-          alt="Cover"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1E3A8A]/60 to-transparent"></div>
-        <h1 className="absolute inset-0 flex items-center justify-center text-white text-4xl font-bold">
-          Haqqımızda
-        </h1>
-      </div>
+      <div
+             className="relative w-full h-[400px] flex flex-col items-center justify-center"
+             style={{
+               backgroundImage: `url(${ServerImage})`,
+               backgroundSize: 'cover',
+               backgroundPosition: 'center',
+             }}
+           >
+             <div className="absolute inset-0 bg-black/40"></div>
+         
+             <h1 className="relative z-10 text-white text-5xl font-bold text-center px-4">
+               Haqqımızda
+             </h1>
+           </div>
 
       <div className="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-0">
         {/* Tab content */}

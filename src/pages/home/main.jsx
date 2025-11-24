@@ -17,23 +17,23 @@ export default function Main() {
   { 
     title: "PDF Təlimatlar", 
     icon: FaFilePdf, 
-    route: "/pdf",
+    route: "/instructions",
     description: "Asanlıqla yükləyə biləcəyiniz və oxuya biləcəyiniz PDF formatında təlimatlar."
   },
   { 
     title: "Video Təlimatlar", 
     icon: FaVideo, 
-    route: "/video",
+    route: "/videos",
     description: "Addım-addım izah edən video dərslərlə prosesləri öyrənin."
   },
   { 
     title: "Quizlər", 
     icon: FaQuestionCircle, 
-    route: "/quiz",
+    route: "/quizzes",
     description: "Biliklərinizi sınayın və öyrəndiklərinizi möhkəmləndirin."
   },
   { 
-    title: "Müraciət qaydaları", 
+    title: "Qaydalar", 
     icon: FaRegFileAlt, 
     route: "/rules",
     description: "Rəsmi müraciət prosedurlarını və lazım olan addımları öyrənin."
@@ -45,9 +45,9 @@ export default function Main() {
     description: "Şirkət və ya təşkilatın əsas siyasətləri və qaydaları haqqında məlumat."
   },
   { 
-    title: "Daxili IT qaydaları", 
+    title: "Prosedurlar", 
     icon: FaLaptopCode, 
-    route: "/it-guidelines",
+    route: "/itrules",
     description: "İT istifadə qaydaları, təhlükəsizlik və daxili protokollar barədə tövsiyələr."
   },
 ];
@@ -119,7 +119,9 @@ const filteredMeetings = meetings
 
             </button>
           </div>
-          <button className='px-16 py-3.5 bg-[#e6e6e6] text-[#1E3A8A] border border-[#1E3A8A]  font-semibold rounded-full   hover:bg-[#1E3A8A] hover:border-[#1E3A8A]  mt-2 hover:text-white hover:shadow-lg'>Müraciət et</button>
+          <button 
+           onClick={() => window.open("https://tm.icta.az/projects/texniki_d-st-k/issues", "_blank")}
+          className='px-16 py-3.5 bg-[#e6e6e6] text-[#1E3A8A] border border-[#1E3A8A]  font-semibold rounded-full   hover:bg-[#1E3A8A] hover:border-[#1E3A8A]  mt-2 hover:text-white hover:shadow-lg'>Müraciət et</button>
         </div>
 
 
@@ -164,7 +166,7 @@ const filteredMeetings = meetings
         />
       </div>
 
-      {/* Görüşlər */}
+      
       <div className="w-[60%] flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h3 className="text-[24px] font-semibold text-black">

@@ -23,17 +23,20 @@ export default function Yenilikler() {
 
   return (
     <div className="bg-white">
-      <div className="relative w-full h-[250px]">
-            <img
-              src={Cover}
-              alt="Cover"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#1E3A8A]/60 to-transparent"></div>
-            <h1 className="absolute inset-0 flex items-center justify-center text-white text-4xl font-bold">
-              Yeniliklər
-            </h1>
-          </div>
+    <div
+          className="relative w-full h-[400px] flex flex-col items-center justify-center"
+          style={{
+            backgroundImage: `url(${Cover})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <div className="absolute inset-0 bg-black/40"></div>
+      
+          <h1 className="relative z-10 text-white text-5xl font-bold text-center px-4">
+            Yeniliklər
+          </h1>
+        </div>
 
     <div className="max-w-7xl mx-auto py-16 px-8">
         

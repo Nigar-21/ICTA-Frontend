@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Plus, Minus } from "lucide-react";
- 
+import ServerImage from "../assets/ITPhoto.png";
 const FAQ = () => {
-const [openIndex, setOpenIndex] = useState(null);
-
+  const [openIndex, setOpenIndex] = useState(0);
 
   const faqs = [
     {
@@ -28,26 +27,42 @@ const [openIndex, setOpenIndex] = useState(null);
     },
   ];
 
-const toggleFAQ = (index) => {
-  setOpenIndex(openIndex === index ? null : index);
-};
-
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
 
   return (
+        <div className="bg-white min-h-screen">
+          {/* Şöbə cover */}
+          <div
+                 className="relative w-full h-[400px] flex flex-col items-center justify-center"
+                 style={{
+                   backgroundImage: `url(${ServerImage})`,
+                   backgroundSize: 'cover',
+                   backgroundPosition: 'center',
+                 }}
+               >
+                 <div className="absolute inset-0 bg-black/40"></div>
+             
+                 <h1 className="relative z-10 text-white text-5xl font-bold text-center px-4">
+                     Tez-tez verilən suallar (FAQ)
+                 </h1>
+               </div>
+
     <div className="bg-white min-h-screen py-16 px-6 sm:px-12 lg:px-24">
-      <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-[#1E3A8A]">
+      {/* <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-[#1E3A8A]">
         Tez-tez verilən suallar (FAQ)
-      </h1>
+      </h1> */}
 
       <div className="max-w-4xl mx-auto space-y-6">
         {faqs.map((faq, index) => (
           <div
             key={index}
             className="rounded-2xl border border-gray-200 shadow-md transition hover:shadow-lg"
-            style={{
-              background:
-                "linear-gradient(180deg, #ffffff 0%, #f9f9ff 50%, #f3f4ff 100%)",
-            }}
+            // style={{
+            //   background:
+            //     "linear-gradient(180deg, #ffffff 0%, #f9f9ff 50%, #f3f4ff 100%)",
+            // }}
           >
             <button
               onClick={() => toggleFAQ(index)}
@@ -63,7 +78,6 @@ const toggleFAQ = (index) => {
               )}
             </button>
 
-        
             {openIndex === index && (
               <div className="px-5 pb-5 text-gray-700 text-[16px] leading-relaxed animate-fadeIn">
                 {faq.answer}
@@ -72,6 +86,7 @@ const toggleFAQ = (index) => {
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

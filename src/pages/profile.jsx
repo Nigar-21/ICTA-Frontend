@@ -1,66 +1,83 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaSignOutAlt } from "react-icons/fa";
+// src/components/ProfileEditModal.jsx
+import React, { useState } from "react";
 
-export default function Dashboard() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+export default function ProfileEditModal({ user, onClose, onSave }) {
+  const [formData, setFormData] = useState({ ...user });
 
-  // İstifadəçi məlumatını localStorage-dan oxuyuruq
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) {
-      setUser(storedUser);
-    } else {
-      navigate("/auth"); // istifadəçi login etməyibsə yönləndir
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/auth");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  if (!user) return null; // istifadəçi yoxdursa heç nə göstərməyək
+  const handleSave = () => {
+    onSave(formData);
+    onClose();
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl p-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-blue-950">Profilim</h1>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded-2xl w-full max-w-md">
+        <h2 className="text-xl font-semibold mb-4">Profili redaktə et</h2>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-gray-600">Tam ad</label>
+            <input
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600">Email</label>
+            <input
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600">Telefon</label>
+            <input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600">Vəzifə</label>
+            <input
+              name="position"
+              value={formData.position}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600">Departament</label>
+            <input
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              className="w-full border px-3 py-2 rounded"
+            />
+          </div>
+        </div>
+        <div className="flex justify-end mt-4 gap-3">
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition"
+            onClick={onClose}
+            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
           >
-            <FaSignOutAlt />
-            Çıxış
+            Ləğv et
           </button>
-        </div>
-
-        {/* İstifadəçi məlumatları */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h2 className="font-semibold text-lg mb-2">Ad</h2>
-            <p>{user.name || "Məlumat yoxdur"}</p>
-          </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h2 className="font-semibold text-lg mb-2">Email</h2>
-            <p>{user.email || "Məlumat yoxdur"}</p>
-          </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h2 className="font-semibold text-lg mb-2">İstifadəçi adı</h2>
-            <p>{user.username || "Məlumat yoxdur"}</p>
-          </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h2 className="font-semibold text-lg mb-2">Vəzifə</h2>
-            <p>{user.role || "User"}</p>
-          </div>
-        </div>
-
-        {/* Gələcək bölmələr */}
-        <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Dashboard bölmələri</h2>
-          <p className="text-gray-600">Burada istifadəçinin fəaliyyətləri, bildirişlər və digər məlumatlar göstəriləcək.</p>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 rounded bg-blue-700 text-white hover:bg-blue-800"
+          >
+            Yadda saxla
+          </button>
         </div>
       </div>
     </div>

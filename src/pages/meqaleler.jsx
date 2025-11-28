@@ -10,7 +10,7 @@ export default function Meqaleler() {
     { id: 1, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
     { id: 2, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
     { id: 3, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-     { id: 4, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
+    { id: 4, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
     { id: 5, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
     { id: 6, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
   ];
@@ -31,16 +31,14 @@ export default function Meqaleler() {
         let newLikes = item.likes;
         let newDislikes = item.dislikes;
 
-       if (currentVote === type) {
-  if (type === "like" && newLikes > 0) newLikes -= 1;
-  if (type === "dislike" && newDislikes > 0) newDislikes -= 1;
-  return { ...item, likes: newLikes, dislikes: newDislikes };
-}
+        if (currentVote === type) {
+          if (type === "like" && newLikes > 0) newLikes -= 1;
+          if (type === "dislike" && newDislikes > 0) newDislikes -= 1;
+          return { ...item, likes: newLikes, dislikes: newDislikes };
+        }
 
-
-       if (currentVote === "like" && newLikes > 0) newLikes -= 1;
-if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
-
+        if (currentVote === "like" && newLikes > 0) newLikes -= 1;
+        if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
 
         if (type === "like") newLikes += 1;
         if (type === "dislike") newDislikes += 1;
@@ -75,7 +73,7 @@ if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
     <div className="w-full">
       {/* Cover */}
       <div
-        className="relative w-full h-[400px] flex flex-col items-center justify-center"
+        className="relative w-full h-[280px] sm:h-[350px] md:h-[400px] flex flex-col items-center justify-center"
         style={{
           backgroundImage: `url(${CoverImage})`,
           backgroundSize: 'cover',
@@ -83,29 +81,36 @@ if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
         }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 text-sm text-gray-300 z-10">
-          <Link to="/" className="hover:underline">Ana səhifə</Link>
+
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 text-xs sm:text-sm text-gray-300 z-10">
+          <Link to="/" className="hover:underline w-[56px] sm:w-full ">Ana səhifə</Link>
           <span>→</span>
           <Link to="/news" className="hover:underline">Yeniliklər</Link>
           <span>→</span>
           <span className="text-white font-semibold">Məqalələr</span>
         </div>
-        <h1 className="relative z-10 text-white text-5xl font-bold text-center px-4">
+
+        <h1 className="relative z-10 text-white text-3xl sm:text-4xl md:text-5xl font-bold text-center px-4">
           Məqalələr
         </h1>
       </div>
 
-      {/* Content Cards */}
-      <div className="max-w-7xl mx-auto px-8 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      {/* Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
         {newsList.map(item => (
           <div key={item.id} className="bg-white rounded-2xl shadow hover:shadow-xl transition flex flex-col overflow-hidden">
-            <div className="w-full h-[250px] bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }}></div>
-            <div className="p-4 flex flex-col flex-1">
-              <div className="flex justify-between text-sm text-gray-500 mb-2">
+            <div className="w-full h-[180px] sm:h-[220px] md:h-[250px] bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }}></div>
+
+            <div className="p-3 sm:p-4 flex flex-col flex-1">
+              <div className="flex justify-between text-xs sm:text-sm text-gray-500 mb-2">
                 <span>{formatDate(item.date)}</span>
                 <span>{item.views} baxış</span>
               </div>
-              <h3 className="text-lg font-semibold text-[#1E3A8A] mb-2">{item.title}</h3>
+
+              <h3 className="text-base sm:text-lg font-semibold text-[#1E3A8A] mb-2">
+                {item.title}
+              </h3>
+
               <p className="text-gray-600 text-sm mb-4 line-clamp-3">{item.content}</p>
 
               <div className="mt-auto flex justify-between items-center">
@@ -118,6 +123,7 @@ if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
                     </button>
                     <span>{item.likes}</span>
                   </div>
+
                   <div className="flex items-center space-x-1">
                     <button onClick={() => handleVote(item.id, "dislike")}>
                       <FontAwesomeIcon
@@ -127,7 +133,11 @@ if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
                     <span>{item.dislikes}</span>
                   </div>
                 </div>
-                <Link to={`/meqaleler/${item.id}`} className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition">
+
+                <Link
+                  to={`/meqaleler/${item.id}`}
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#1E3A8A] text-white text-sm rounded-full hover:bg-[#17275B] transition"
+                >
                   Tam bax
                 </Link>
               </div>

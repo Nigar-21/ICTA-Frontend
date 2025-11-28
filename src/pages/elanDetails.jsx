@@ -63,18 +63,15 @@ export default function ElanDetails() {
         let newLikes = item.likes;
         let newDislikes = item.dislikes;
 
-        // Əgər eyni düyməyə təkrar basılıbsa, səs ləğv olunur
         if (currentVote === type) {
           if (type === "like" && newLikes > 0) newLikes -= 1;
           if (type === "dislike" && newDislikes > 0) newDislikes -= 1;
           return { ...item, likes: newLikes, dislikes: newDislikes };
         }
 
-        // Əvvəlki səsi ləğv et
         if (currentVote === "like" && newLikes > 0) newLikes -= 1;
         if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
 
-        // Yeni səs əlavə et
         if (type === "like") newLikes += 1;
         if (type === "dislike") newDislikes += 1;
 
@@ -96,9 +93,9 @@ export default function ElanDetails() {
 
   return (
     <div className="w-full">
-      {/* Ümumi Cover */}
+      {/* Cover */}
       <div
-        className="relative h-[400px] flex items-center justify-center text-center"
+        className="relative h-[200px] sm:h-[400px] flex items-center justify-center text-center"
         style={{
           backgroundImage: `url(${CoverImage})`,
           backgroundSize: "cover",
@@ -106,24 +103,25 @@ export default function ElanDetails() {
         }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
-        {/* Breadcrumb */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 text-md text-gray-300 z-10">
-  <Link to="/" className="hover:underline">Ana səhifə</Link>
-  <span>→</span>
-  <Link to="/news" className="hover:underline">Yeniliklər</Link>
-  <span>→</span>
-  <span className="hover:underline">Elan</span>
-  <span>→</span>
-  <span className="font-semibold">{news.title}</span>
-</div>
 
-        <h1 className="relative z-10 text-white text-5xl font-bold px-4">{news.title}</h1>
+        {/* Breadcrumb */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-1 sm:space-x-2 text-xs sm:text-md text-gray-300 z-10">
+          <Link to="/" className="hover:underline w-[60px] sm:w-full ">Ana səhifə</Link>
+          <span>→</span>
+          <Link to="/news" className="hover:underline">Yeniliklər</Link>
+          <span>→</span>
+          <span className="hover:underline">Elan</span>
+          <span>→</span>
+          <span className="font-semibold w-[90px] sm:w-full line-clamp-2 ">{news.title}</span>
+        </div>
+
+        <h1 className="relative z-10 text-white text-2xl sm:text-5xl font-bold px-4 text-center">{news.title}</h1>
       </div>
 
-      <div className="max-w-7xl mx-auto px-8 py-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 sm:py-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
         {/* Sol Sütun */}
         <div className="sm:col-span-2 space-y-6">
-          <div className="w-full h-[400px] rounded-2xl overflow-hidden">
+          <div className="w-full h-[200px] sm:h-[400px] rounded-2xl overflow-hidden">
             <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
           </div>
 
@@ -132,10 +130,10 @@ export default function ElanDetails() {
             <span>{news.views} baxış</span>
           </div>
 
-          <h2 className="text-3xl font-bold text-[#1E3A8A]">{news.title}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A]">{news.title}</h2>
 
           {/* Like / Dislike */}
-          <div className="flex items-center space-x-6 text-gray-700">
+          <div className="flex items-center space-x-4 sm:space-x-6 text-gray-700">
             <div className="flex items-center space-x-2">
               <button onClick={() => handleVote(news.id, "like")}>
                 <FontAwesomeIcon icon={userVotes[news.id] === "like" ? faThumbsUpSolid : faThumbsUpRegular} />
@@ -168,21 +166,20 @@ export default function ElanDetails() {
 
         {/* Sağ Sütun */}
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-[#1E3A8A]">Ən çox baxılanlar</h3>
-       {mostViewed.map((item) => (
-  <Link 
-    key={item.id} 
-    to={`/elanlar/${item.id}`} // <- id-yə uyğun səhifəyə keçid
-    className="flex items-center space-x-3 hover:bg-gray-100 rounded p-2 transition"
-  >
-    <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded" />
-    <div className="flex flex-col">
-      <span className="text-sm font-semibold text-gray-700">{item.title}</span>
-      <span className="text-xs text-gray-500">{item.date} · {item.views} baxış</span>
-    </div>
-  </Link>
-))}
-
+          <h3 className="text-lg sm:text-xl font-semibold text-[#1E3A8A]">Ən çox baxılanlar</h3>
+          {mostViewed.map((item) => (
+            <Link 
+              key={item.id} 
+              to={`/elanlar/${item.id}`}
+              className="flex items-center space-x-2 sm:space-x-3 hover:bg-gray-100 rounded p-2 transition"
+            >
+              <img src={item.image} alt={item.title} className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded" />
+              <div className="flex flex-col">
+                <span className="text-sm sm:text-base font-semibold text-gray-700">{item.title}</span>
+                <span className="text-xs sm:text-sm text-gray-500">{item.date} · {item.views} baxış</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>

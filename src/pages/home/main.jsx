@@ -97,9 +97,9 @@ const filteredMeetings = meetings
     background: 'linear-gradient(180deg, #162556 0%, #2c3a7b 50%, #3b446f 100%)'
   }}
         className="mx-auto flex 
-       p-8 flex-col items-center gap-8  w-full  h-[380px] relative  ">
-        <h1 className='text-white font-semibold text-[35px] '>Şəbəkə inzibatçılığı və texniki dəstək şöbəsi</h1>
-          <div className=" w-[40%] items-center justify-between rounded-full border border-[#D4D4D4] hover:border-[#92B5F6] sm:flex sm:h-[48px] sm:px-6">
+       p-8 flex-col items-center gap-4 sm:gap-8  w-full h-[300px] sm:h-[380px] relative  ">
+        <h1 className='text-white font-semibold text-[20px] text-center sm:text-[35px] '>Şəbəkə inzibatçılığı və texniki dəstək şöbəsi</h1>
+          <div className="w-[80%] sm:w-[40%] items-center justify-between rounded-full border border-[#D4D4D4] hover:border-[#92B5F6] flex h-[36px] sm:h-[48px] px-4 sm:px-6">
             <input
               onChange={(e) => setInputValue(e?.target?.value)}
               onKeyDown={(e) => {
@@ -109,10 +109,10 @@ const filteredMeetings = meetings
               }}
               type="text"
               placeholder="Axtar"
-              className="hidden w-full bg-transparent text-base text-[#1A1A1A] placeholder-[#9C9C9C] outline-none sm:block"
+              className=" w-full bg-transparent text-sm sm:text-base text-[#1A1A1A] placeholder-[#9C9C9C] outline-none"
             />
             <button className="ml-2  flex-shrink-0 cursor-pointer"> 
-           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+           <svg className="w-[18px] h-[18px] sm:w-[24px] sm:h-[24px] " viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
 <path d="M22 22L20 20" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"/>
 </svg>
@@ -121,28 +121,31 @@ const filteredMeetings = meetings
           </div>
           <button 
            onClick={() => window.open("https://tm.icta.az/projects/texniki_d-st-k/issues", "_blank")}
-          className='px-16 py-3.5 bg-[#e6e6e6] text-[#1E3A8A] border border-[#1E3A8A]  font-semibold rounded-full   hover:bg-[#1E3A8A] hover:border-[#1E3A8A]  mt-2 hover:text-white hover:shadow-lg'>Müraciət et</button>
+          className='px-8 sm:px-16 py-2 sm:py-3.5 bg-[#e6e6e6] text-[#1E3A8A] border border-[#1E3A8A] text-sm sm:text-xl font-semibold rounded-full   hover:bg-[#1E3A8A] hover:border-[#1E3A8A]  mt-2 hover:text-white hover:shadow-lg'>Müraciət et</button>
         </div>
 
 
        {/*boxes*/}
-    <section className="bg-transparent text-black pb-6 px-8 relative -mt-14">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+<section 
+  className="bg-transparent text-black pb-6 px-4 sm:px-8 relative -mt-14"
+>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto">
     {services.map((service, index) => (
-      <div  onClick={() => navigate(service.route)} 
+      <div
+        onClick={() => navigate(service.route)}
         key={index}
-        className="bg-white rounded-2xl p-6 h-[250px] hover:bg-[#eef2ff] transition-all duration-300 shadow-xl flex flex-col justify-center items-start cursor-pointer border border-[#e5e7eb] relative overflow-visible"
+        className="bg-white rounded-2xl p-4 sm:p-6 h-[250px] hover:bg-[#eef2ff] transition-all duration-300 shadow-xl flex flex-col justify-center items-start cursor-pointer border border-[#e5e7eb] relative overflow-visible"
       >
-        <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-[#dce9ff] shadow-sm">
-          <service.icon className="text-3xl text-[#1E3A8A]" />
+        <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 flex items-center justify-center rounded-full bg-[#dce9ff] shadow-sm">
+          <service.icon className="text-2xl sm:text-3xl text-[#1E3A8A]" />
         </div>
-        <h3 className="text-xl font-semibold">{service.title}</h3>
-      <p className="text-gray-500 mt-2 text-sm w-[80%] ">{service.description}</p>
-    
-        <div      className="absolute bottom-10 right-4 w-8 h-8 flex items-center justify-center bg-[#1E3A8A] text-white rounded-full shadow-lg cursor-pointer ">
+        <h3 className="text-lg sm:text-xl font-semibold">{service.title}</h3>
+        <p className="text-gray-500 mt-2 text-[12px] sm:text-sm w-[90%] sm:w-[80%]">{service.description}</p>
+
+        <div className="absolute bottom-4 sm:bottom-10 right-4 w-8 h-8 flex items-center justify-center bg-[#1E3A8A] text-white rounded-full shadow-lg cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-4 sm:h-5 w-4 sm:w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -155,57 +158,54 @@ const filteredMeetings = meetings
   </div>
 </section>
 
-  {/*calendar*/}
-   <section className="bg-white p-20 rounded-2xl   w-[83%] mx-auto justify-center flex gap-14 ">
-      
-      <div className="">
-        <Calendar
-          onChange={setSelectedDate}
-          value={selectedDate}
-          className="rounded-xl shadow-2xl p-4"
-        />
-      </div>
-
-      
-      <div className="w-[60%] flex flex-col gap-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-[24px] font-semibold text-black">
-            Seçilmiş tarix: {selectedDate.toLocaleDateString()}
-          </h3>
-        <button
-  onClick={() => navigate("/calendar", { state: { selectedDate } })}
-  className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition font-medium"
->
-  Yeni Görüş
-</button>
-
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredMeetings.map((meeting, idx) => (
-            <div key={idx} className="bg-white p-4 rounded-xl shadow-lg hover:hover:bg-[#eef2ff] transition cursor-pointer">
-              <h4 className="font-semibold text-[#1E3A8A] text-[18px] mb-1">{meeting.title}</h4>
-              <p className="text-gray-600 text-[14px] text-sm">{meeting.time}</p>
-              <p className="text-gray-500 text-[13px] mt-1">Məkan: {meeting.place}</p>
-            </div>
-          ))}
-        </div>
-
-     {filteredMeetings.length > 0 && (
-  <div className="mt-2 flex justify-end">
-    <button
-      onClick={() =>
-        navigate("/calendar", { state: { selectedDate } }) 
-      }
-      className="px-4 py-2 bg-gray-200 text-[#1E3A8A] font-medium rounded-full hover:bg-gray-300 transition cursor-pointer"
-    >
-      Bütün Görüşlər
-    </button>
+{/* Calendar Section */}
+<section className="bg-white p-6 sm:p-20 rounded-2xl w-full  sm:w-[83%] mx-auto flex flex-col sm:flex-row justify-center gap-6 sm:gap-14">
+  
+  <div className=" sm:w-auto">
+    <Calendar
+      onChange={setSelectedDate}
+      value={selectedDate}
+      className="rounded-xl shadow-2xl p-4 w-full sm:w-auto"
+    />
   </div>
-)}
 
+  <div className="w-full sm:w-[60%] flex flex-col gap-4">
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+      <h3 className="text-lg sm:text-[24px] font-semibold text-black">
+        Seçilmiş tarix: {selectedDate.toLocaleDateString()}
+      </h3>
+      <button
+        onClick={() => navigate("/calendar", { state: { selectedDate } })}
+        className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition font-medium text-sm sm:text-base"
+      >
+        Yeni Görüş
+      </button>
+    </div>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {filteredMeetings.map((meeting, idx) => (
+        <div key={idx} className="bg-white p-4 rounded-xl shadow-lg hover:bg-[#eef2ff] transition cursor-pointer">
+          <h4 className="font-semibold text-[#1E3A8A] text-[16px] sm:text-[18px] mb-1">{meeting.title}</h4>
+          <p className="text-gray-600 text-[12px] sm:text-[14px]">{meeting.time}</p>
+          <p className="text-gray-500 text-[11px] sm:text-[13px] mt-1">Məkan: {meeting.place}</p>
+        </div>
+      ))}
+    </div>
+
+    {filteredMeetings.length > 0 && (
+      <div className="mt-2 flex justify-end">
+        <button
+          onClick={() => navigate("/calendar", { state: { selectedDate } })}
+          className="px-4 py-2 bg-gray-200 text-[#1E3A8A] font-medium rounded-full hover:bg-gray-300 transition cursor-pointer text-sm sm:text-base"
+        >
+          Bütün Görüşlər
+        </button>
       </div>
-    </section>
+    )}
+
+  </div>
+</section>
+
 
         <News/>
         <About/>

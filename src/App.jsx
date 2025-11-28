@@ -21,6 +21,8 @@ import ItRules from './pages/itRules';
 import Auth from './pages/auth';
 import Rules from './pages/rules';
 import Profile from './pages/profile';
+import TransactionsPage from "./pages/transactions/Transactions";
+
 function App() {
   return (
     <Routes>
@@ -51,6 +53,10 @@ function App() {
             
             <Route path="/rules" element={<Rules />} />
             <Route path="/profile" element={<Profile />} />
+                <Route path="/transactions" element={<TransactionsPage />} />
+           
+
+
           </Routes>
         </MainLayout>
       }/>

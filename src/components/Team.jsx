@@ -70,7 +70,7 @@ const Komandamiz = () => {
 
   return (
     <section className="text-[#1E3A8A] pb-8 px-8">
-      <h2 className="text-3xl font-bold text-center mb-4">Komandamız</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">Komandamız</h2>
 
       <div className="max-w-7xl mx-auto">
         <Slider {...settings}>

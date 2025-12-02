@@ -78,7 +78,7 @@ export default function Header() {
   return (
     <>
       {/* DESKTOP HEADER */}
-      <div className="mx-auto hidden sm:flex w-full flex-nowrap items-center justify-between py-8 px-16 bg-blue-950">
+      <div className= " header-wrapper mx-auto hidden sm:flex w-full flex-nowrap items-center justify-between py-8 px-16 bg-blue-950">
         <img src={Logo} alt="logo" className='w-[310px]' />
 
         {/* NAVIGATION */}

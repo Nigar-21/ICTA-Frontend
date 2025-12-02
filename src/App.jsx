@@ -20,8 +20,9 @@ import Policies from "./pages/policies";
 import ItRules from './pages/itRules';
 import Auth from './pages/auth';
 import Rules from './pages/rules';
-import Profile from './pages/profile';
-import TransactionsPage from "./pages/transactions/Transactions";
+import ProfilePage  from './pages/user/ProfilePage';
+
+
 
 function App() {
   return (
@@ -52,8 +53,8 @@ function App() {
             <Route path="/itrules" element={<ItRules />} />
             
             <Route path="/rules" element={<Rules />} />
-            <Route path="/profile" element={<Profile />} />
-                <Route path="/transactions" element={<TransactionsPage />} />
+            
+            <Route path="/user" element={<ProfilePage />} />
            
 
 

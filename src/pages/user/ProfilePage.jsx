@@ -10,6 +10,30 @@ export default function UserPanel() {
   const initialTab = location.state?.initialTab || "profile"; 
   const [activeTab, setActiveTab] = useState(initialTab);
 const [isEditing, setIsEditing] = useState(false);
+const [reserveType, setReserveType] = useState("range");
+const [rangeStartDate, setRangeStartDate] = useState("");
+const [rangeEndDate, setRangeEndDate] = useState("");
+const [rangeStartHour, setRangeStartHour] = useState("");
+const [rangeEndHour, setRangeEndHour] = useState("");
+const [rangeRoom, setRangeRoom] = useState("");
+const [rangeReservations, setRangeReservations] = useState([]);
+const [showRangeStartCal, setShowRangeStartCal] = useState(false);
+const [showRangeEndCal, setShowRangeEndCal] = useState(false);
+
+
+const isRoomAvailable = () => {
+  return !rangeReservations.some((r) => {
+    if (r.room !== rangeRoom) return false;
+
+    const newStart = new Date(`${rangeStartDate} ${rangeStartHour}:00`);
+    const newEnd = new Date(`${rangeEndDate} ${rangeEndHour}:00`);
+    const oldStart = new Date(`${r.startDate} ${r.startHour}:00`);
+    const oldEnd = new Date(`${r.endDate} ${r.endHour}:00`);
+
+    return newStart < oldEnd && newEnd > oldStart;
+  });
+};
+
 
 const [profile, setProfile] = useState({
   id: "USR-1023",
@@ -53,6 +77,26 @@ const [meetingPlace, setMeetingPlace] = useState("Ofis");
 const [oldPassword, setOldPassword] = useState("");
 const [newPassword, setNewPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
+const [weeklyStartDate, setWeeklyStartDate] = useState("");
+const [weeklyEndDate, setWeeklyEndDate] = useState("");
+const [weeklyDays, setWeeklyDays] = useState([]);
+const [weeklyRoom, setWeeklyRoom] = useState("");
+const [weeklyStartHour, setWeeklyStartHour] = useState("");
+const [weeklyEndHour, setWeeklyEndHour] = useState("");
+const [weeklyReservations, setWeeklyReservations] = useState([]);
+const [showWeeklyStartCal, setShowWeeklyStartCal] = useState(false);
+const [showWeeklyEndCal, setShowWeeklyEndCal] = useState(false);
+
+
+const weekDays = [
+  { label: "B.e", value: 1 },
+  { label: "Ç.a", value: 2 },
+  { label: "Ç", value: 3 },
+  { label: "C.a", value: 4 },
+  { label: "C", value: 5 },
+  { label: "Ş", value: 6 },
+  { label: "B", value: 0 },
+];
 
 
 
@@ -329,7 +373,6 @@ const canCreateMeeting =
           <>
             <h1 className="text-2xl font-semibold text-[#1E3A8A]">Görüşlərim</h1>
 
-            {/* Mövcud Görüşlər */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               {meetings.map((m, idx) => (
                 <div key={idx} className="bg-[#eef2ff] p-4 rounded-xl shadow hover:shadow-md transition cursor-pointer">
@@ -342,11 +385,9 @@ const canCreateMeeting =
 
 <div ref={createRef}>
 
-          {/* Yeni Görüş Təyini */}
 <div className="bg-white p-6 rounded-3xl shadow-lg flex flex-col gap-6">
   <h2 className="text-2xl font-bold text-[#1E3A8A] border-b pb-2 mb-4">Yeni Görüş Təyini</h2>
 
-  {/* Tarix seçimi */}
   <div className="relative w-full max-w-xs">
     <label className="block text-gray-600 mb-1 font-medium">Tarix</label>
     <input
@@ -370,7 +411,7 @@ const canCreateMeeting =
   </div>
 
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    {/* Otaq seçimi */}
+ 
     <div className="bg-[#eef2ff] p-4 rounded-2xl shadow-inner flex flex-col gap-3">
       <label className="text-gray-700 font-medium">Otaq Seçin</label>
       <select
@@ -425,7 +466,6 @@ const canCreateMeeting =
       )}
     </div>
 
-    {/* Əməkdaş seçimi */}
     <div className="bg-[#eef2ff] p-4 rounded-2xl shadow-inner flex flex-col gap-3">
       <label className="text-gray-700 font-medium">Əməkdaş Seçin</label>
       <select
@@ -522,7 +562,7 @@ const canCreateMeeting =
       Yeni Görüş Təyini
     </h3>
 
-    {/* Mövzu */}
+
     <div className="flex flex-col gap-1">
       <label className="text-gray-700 font-medium">Mövzu</label>
       <input
@@ -534,7 +574,6 @@ const canCreateMeeting =
       />
     </div>
 
-    {/* Tarix, Otaq, Əməkdaş, Saat */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="flex flex-col gap-1">
         <label className="text-gray-700 font-medium">Tarix</label>
@@ -610,7 +649,6 @@ const canCreateMeeting =
       </div>
     </div>
 
-    {/* Görüş yeri */}
     <div className="flex flex-col gap-1">
       <label className="text-gray-700 font-medium">Görüş Yeri</label>
       <input
@@ -621,7 +659,6 @@ const canCreateMeeting =
       />
     </div>
 
-    {/* Booked info */}
     {bookedInfo && (
       <div className="bg-red-50 border border-red-300 rounded-2xl p-4 shadow-md mt-2 text-red-700">
         <h4 className="font-semibold mb-2 flex items-center gap-2">⛔ Bu saat artıq doludur</h4>
@@ -636,7 +673,6 @@ const canCreateMeeting =
       </div>
     )}
 
-    {/* Buttons */}
     <div className="flex justify-end gap-4 mt-4">
       <button
         onClick={() => setShowCreatePanel(false)}
@@ -675,7 +711,342 @@ const canCreateMeeting =
           </>
         )}
 
-        {activeTab === "reserve" && <h1 className="text-2xl font-semibold text-[#1E3A8A]">Otaq Rezervi</h1>}
+{activeTab === "reserve" && (
+  <>
+    <h1 className="text-2xl font-semibold text-[#1E3A8A]">
+      Otaq Rezervi
+    </h1>
+
+ 
+    <div className="flex gap-4 mt-4">
+      <button
+        onClick={() => setReserveType("range")}
+        className={`px-5 py-2 rounded-xl font-medium transition
+          ${reserveType === "range"
+            ? "bg-[#1E3A8A] text-white"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"}
+        `}
+      >
+        Vaxt Aralığı
+      </button>
+
+      <button
+        onClick={() => setReserveType("weekly")}
+        className={`px-5 py-2 rounded-xl font-medium transition
+          ${reserveType === "weekly"
+            ? "bg-[#1E3A8A] text-white"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"}
+        `}
+      >
+        Həftəlik Bron
+      </button>
+    </div>
+
+
+  {reserveType === "range" && (
+  <div className="mt-6 bg-gray-50 rounded-3xl p-6 shadow flex flex-col gap-4">
+
+    <h2 className="text-xl font-semibold text-[#1E3A8A]">
+      Müəyyən Vaxt Aralığı üzrə Bron
+    </h2>
+
+
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <div className="relative">
+    <label className="text-sm text-gray-600">Başlanğıc Tarix</label>
+    <input
+      type="text"
+      readOnly
+      value={rangeStartDate}
+      placeholder="Tarix seçin"
+      onClick={() => setShowRangeStartCal(!showRangeStartCal)}
+      className="w-full border rounded-xl px-4 py-2 cursor-pointer"
+    />
+
+    {showRangeStartCal && (
+      <div className="absolute z-20 mt-2 bg-white shadow rounded-xl">
+        <Calendar
+          onChange={(date) => {
+            setRangeStartDate(date.toLocaleDateString("az-AZ"));
+            setShowRangeStartCal(false);
+          }}
+        />
+      </div>
+    )}
+  </div>
+
+  <div className="relative">
+    <label className="text-sm text-gray-600">Bitmə Tarix</label>
+    <input
+      type="text"
+      readOnly
+      value={rangeEndDate}
+      placeholder="Tarix seçin"
+      onClick={() => setShowRangeEndCal(!showRangeEndCal)}
+      className="w-full border rounded-xl px-4 py-2 cursor-pointer"
+    />
+
+    {showRangeEndCal && (
+      <div className="absolute z-20 mt-2 bg-white shadow rounded-xl">
+        <Calendar
+          onChange={(date) => {
+            setRangeEndDate(date.toLocaleDateString("az-AZ"));
+            setShowRangeEndCal(false);
+          }}
+        />
+      </div>
+    )}
+  </div>
+
+</div>
+
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <select
+        value={rangeStartHour}
+        onChange={(e) => setRangeStartHour(e.target.value)}
+        className="border rounded-xl px-4 py-2"
+      >
+        <option value="">Başlanğıc saat</option>
+        {hours.map((h) => (
+          <option key={h} value={h}>{h}:00</option>
+        ))}
+      </select>
+
+      <select
+        value={rangeEndHour}
+        onChange={(e) => setRangeEndHour(e.target.value)}
+        className="border rounded-xl px-4 py-2"
+      >
+        <option value="">Bitiş saat</option>
+        {hours.map((h) => (
+          <option key={h} value={h}>{h}:00</option>
+        ))}
+      </select>
+    </div>
+
+    <select
+      value={rangeRoom}
+      onChange={(e) => setRangeRoom(e.target.value)}
+      className="border rounded-xl px-4 py-2"
+    >
+      <option value="">Otaq seçin</option>
+      {rooms.map((r) => (
+        <option key={r} value={r}>{r}</option>
+      ))}
+    </select>
+
+    <button
+      onClick={() => {
+        if (!isRoomAvailable()) {
+          alert("❌ Bu otaq seçilən vaxt aralığında artıq bron edilib");
+          return;
+        }
+
+        setRangeReservations([
+          {
+            startDate: rangeStartDate,
+            endDate: rangeEndDate,
+            startHour: rangeStartHour,
+            endHour: rangeEndHour,
+            room: rangeRoom,
+          },
+          ...rangeReservations,
+        ]);
+
+        // reset
+        setRangeStartDate("");
+        setRangeEndDate("");
+        setRangeStartHour("");
+        setRangeEndHour("");
+        setRangeRoom("");
+      }}
+      className="bg-[#1E3A8A] text-white py-2 rounded-xl font-semibold"
+    >
+      Bron et
+    </button>
+  </div>
+)}
+
+{rangeReservations.length > 0 && (
+  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+    {rangeReservations.map((r, i) => (
+      <div key={i} className="bg-[#eef2ff] p-4 rounded-xl shadow">
+        <p><b>Otaq:</b> {r.room}</p>
+        <p><b>Tarix:</b> {r.startDate} → {r.endDate}</p>
+        <p><b>Saat:</b> {r.startHour}:00 – {r.endHour}:00</p>
+      </div>
+    ))}
+  </div>
+)}
+
+
+ {reserveType === "weekly" && (
+  <div className="mt-6 bg-gray-50 rounded-3xl p-6 shadow flex flex-col gap-5">
+
+    <h2 className="text-xl font-semibold text-[#1E3A8A]">
+      Həftəlik Bron
+    </h2>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="relative">
+        <input
+          readOnly
+          placeholder="Başlanğıc tarix"
+          value={weeklyStartDate}
+          onClick={() => setShowWeeklyStartCal(true)}
+          className="w-full border rounded-xl px-4 py-2 cursor-pointer"
+        />
+        {showWeeklyStartCal && (
+          <div className="absolute z-20 bg-white shadow rounded-xl mt-2">
+            <Calendar
+              onChange={(d) => {
+                setWeeklyStartDate(d.toLocaleDateString("az-AZ"));
+                setShowWeeklyStartCal(false);
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="relative">
+        <input
+          readOnly
+          placeholder="Bitmə tarix"
+          value={weeklyEndDate}
+          onClick={() => setShowWeeklyEndCal(true)}
+          className="w-full border rounded-xl px-4 py-2 cursor-pointer"
+        />
+        {showWeeklyEndCal && (
+          <div className="absolute z-20 bg-white shadow rounded-xl mt-2">
+            <Calendar
+              onChange={(d) => {
+                setWeeklyEndDate(d.toLocaleDateString("az-AZ"));
+                setShowWeeklyEndCal(false);
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div>
+      <p className="font-medium text-gray-700 mb-2">Həftə Günləri</p>
+      <div className="flex flex-wrap gap-2">
+        {weekDays.map((d) => (
+          <button
+            key={d.value}
+            onClick={() =>
+              setWeeklyDays((prev) =>
+                prev.includes(d.value)
+                  ? prev.filter((x) => x !== d.value)
+                  : [...prev, d.value]
+              )
+            }
+            className={`px-4 py-2 rounded-xl font-medium transition
+              ${weeklyDays.includes(d.value)
+                ? "bg-[#1E3A8A] text-white"
+                : "bg-gray-200 hover:bg-gray-300"}
+            `}
+          >
+            {d.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <select
+        value={weeklyStartHour}
+        onChange={(e) => setWeeklyStartHour(e.target.value)}
+        className="border rounded-xl px-4 py-2"
+      >
+        <option value="">Başlanğıc saat</option>
+        {hours.map((h) => (
+          <option key={h} value={h}>{h}:00</option>
+        ))}
+      </select>
+
+      <select
+        value={weeklyEndHour}
+        onChange={(e) => setWeeklyEndHour(e.target.value)}
+        className="border rounded-xl px-4 py-2"
+      >
+        <option value="">Bitmə saat</option>
+        {hours.map((h) => (
+          <option key={h} value={h}>{h}:00</option>
+        ))}
+      </select>
+    </div>
+
+  
+    <select
+      value={weeklyRoom}
+      onChange={(e) => setWeeklyRoom(e.target.value)}
+      className="border rounded-xl px-4 py-2"
+    >
+      <option value="">Otaq seçin</option>
+      {rooms.map((r) => (
+        <option key={r} value={r}>{r}</option>
+      ))}
+    </select>
+
+  
+    <button
+      onClick={() => {
+        const start = new Date(weeklyStartDate);
+        const end = new Date(weeklyEndDate);
+
+        let current = new Date(start);
+        let created = [];
+
+        while (current <= end) {
+          if (weeklyDays.includes(current.getDay())) {
+            created.push({
+              room: weeklyRoom,
+              date: current.toLocaleDateString("az-AZ"),
+              startHour: weeklyStartHour,
+              endHour: weeklyEndHour,
+            });
+          }
+          current.setDate(current.getDate() + 1);
+        }
+
+        setWeeklyReservations([...created, ...weeklyReservations]);
+
+        // reset
+        setWeeklyDays([]);
+        setWeeklyRoom("");
+        setWeeklyStartHour("");
+        setWeeklyEndHour("");
+        setWeeklyStartDate("");
+        setWeeklyEndDate("");
+      }}
+      className="bg-[#1E3A8A] text-white py-2 rounded-xl font-semibold"
+    >
+      Bron et
+    </button>
+  </div>
+)}
+{weeklyReservations.length > 0 && (
+  <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+    {weeklyReservations.map((r, i) => (
+      <div key={i} className="bg-[#eef2ff] p-4 rounded-xl shadow">
+        <p><b>Otaq:</b> {r.room}</p>
+        <p><b>Tarix:</b> {r.date}</p>
+        <p><b>Saat:</b> {r.startHour}:00 – {r.endHour}:00</p>
+      </div>
+    ))}
+  </div>
+)}
+
+
+  </>
+)}
+
+
+        
       </div>
     </div>
   

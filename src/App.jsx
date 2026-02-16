@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { UserContext } from "./UserContext";
 import MainLayout from './layout/Main';
 import Home from './pages/home/main';
 import News from "./pages/news";
@@ -25,12 +26,14 @@ import ProfilePage  from './pages/user/ProfilePage';
 
 
 function App() {
+   const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null
+  );
   return (
+    
+    <UserContext.Provider value={{ user, setUser }}>
     <Routes>
-      {/* Auth səhifəsi - layout olmadan */}
       <Route path="/auth" element={<Auth />} />
-
-      {/* Digər səhifələr - layout ilə */}
       <Route path="/*" element={
         <MainLayout>
           <Routes>
@@ -62,6 +65,7 @@ function App() {
         </MainLayout>
       }/>
     </Routes>
+      </UserContext.Provider>
   );
 }
 

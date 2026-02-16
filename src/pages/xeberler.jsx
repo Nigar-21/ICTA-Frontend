@@ -1,60 +1,94 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import CoverImage from "../assets/ITPhoto.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp as faThumbsUpSolid, faThumbsDown as faThumbsDownSolid } from "@fortawesome/free-solid-svg-icons";
 import { faThumbsUp as faThumbsUpRegular, faThumbsDown as faThumbsDownRegular } from "@fortawesome/free-regular-svg-icons";
 
 export default function Xeberler() {
-  const initialNewsList = [
-    { id: 1, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-11-12", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
-    { id: 2, title: "Sistem yeniləndi", date: "2025-11-11", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
-    { id: 3, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-    { id: 4, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
-    { id: 5, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
-    { id: 6, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-  ];
-
-  const [newsList, setNewsList] = useState(initialNewsList);
+  const [newsList, setNewsList] = useState([]);
   const [userVotes, setUserVotes] = useState({});
+  const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await axios.get("http://localhost:7176/api/Novelty/getall");
+        setNewsList(res.data);
+        setLoading(false);
+      } catch (err) {
+        console.error("News API error:", err);
+        setLoading(false);
+      }
+    };
+    fetchNews();
+  }, []);
 
   useEffect(() => {
     const storedVotes = JSON.parse(localStorage.getItem("userVotes")) || {};
     setUserVotes(storedVotes);
   }, []);
 
-  const handleVote = (id, type) => {
-    const currentVote = userVotes[id];
+  const handleVote = async (id, type) => {
+    try {
+      const currentVote = userVotes[id];
 
-    const updatedNews = newsList.map(item => {
-      if (item.id === id) {
-        let newLikes = item.likes;
-        let newDislikes = item.dislikes;
+      let likeActiveDeactive = 0;
+      let dislikeActiveDeactive = 0;
 
-        if (currentVote === type) {
-          if (type === "like" && newLikes > 0) newLikes -= 1;
-          if (type === "dislike" && newDislikes > 0) newDislikes -= 1;
+      if (type === "like") {
+        likeActiveDeactive = currentVote === "like" ? 0 : 1;
+        if (currentVote === "dislike") dislikeActiveDeactive = 0;
+      } else {
+        dislikeActiveDeactive = currentVote === "dislike" ? 0 : 1;
+        if (currentVote === "like") likeActiveDeactive = 0;
+      }
+
+      if (likeActiveDeactive !== null) {
+        await axios.post(`http://localhost:7176/api/Novelty/like/${id}/${likeActiveDeactive}`);
+      }
+      if (dislikeActiveDeactive !== null) {
+        await axios.post(`http://localhost:7176/api/Novelty/dislike/${id}/${dislikeActiveDeactive}`);
+      }
+
+    
+      const updatedNews = newsList.map(item => {
+        if (item.id === id) {
+          let newLikes = item.likes;
+          let newDislikes = item.dislikes;
+
+          if (type === "like") {
+            if (currentVote === "like") newLikes--;
+            else {
+              newLikes++;
+              if (currentVote === "dislike") newDislikes--;
+            }
+          } else {
+            if (currentVote === "dislike") newDislikes--;
+            else {
+              newDislikes++;
+              if (currentVote === "like") newLikes--;
+            }
+          }
+
           return { ...item, likes: newLikes, dislikes: newDislikes };
         }
+        return item;
+      });
 
-        if (currentVote === "like" && newLikes > 0) newLikes -= 1;
-        if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
+      setNewsList(updatedNews);
 
-        if (type === "like") newLikes += 1;
-        if (type === "dislike") newDislikes += 1;
+      const updatedVotes = { ...userVotes };
+      if (currentVote === type) delete updatedVotes[id];
+      else updatedVotes[id] = type;
 
-        return { ...item, likes: newLikes, dislikes: newDislikes };
-      }
-      return item;
-    });
-
-    const updatedVotes = { ...userVotes };
-    if (currentVote === type) delete updatedVotes[id];
-    else updatedVotes[id] = type;
-
-    setNewsList(updatedNews);
-    setUserVotes(updatedVotes);
-    localStorage.setItem("userVotes", JSON.stringify(updatedVotes));
+      setUserVotes(updatedVotes);
+      localStorage.setItem("userVotes", JSON.stringify(updatedVotes));
+    } catch (err) {
+      console.error("Vote API error:", err);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -75,11 +109,11 @@ export default function Xeberler() {
     });
   };
 
+  if (loading) return <div className="text-center py-20">Yüklənir...</div>;
+  if (!newsList.length) return <div className="text-center py-20">Xəbər tapılmadı</div>;
 
   return (
     <div className="w-full">
-      
-      {/* Cover */}
       <div
         className="relative w-full h-[240px] sm:h-[300px] md:h-[400px] flex flex-col items-center justify-center"
         style={{
@@ -103,14 +137,13 @@ export default function Xeberler() {
         </h1>
       </div>
 
-      {/* Content Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-10 md:py-12 
                       grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
 
         {newsList.map(item => (
           <div key={item.id} className="bg-white rounded-2xl shadow hover:shadow-xl transition flex flex-col overflow-hidden">
             <div className="w-full h-[180px] sm:h-[220px] md:h-[250px] bg-cover bg-center"
-                 style={{ backgroundImage: `url(${item.image})` }}></div>
+                 style={{ backgroundImage: `url(${item.image || CoverImage})` }}></div>
 
             <div className="p-3 sm:p-4 flex flex-col flex-1">
 

@@ -6,55 +6,59 @@ import { faThumbsUp as faThumbsUpSolid, faThumbsDown as faThumbsDownSolid } from
 import { faThumbsUp as faThumbsUpRegular, faThumbsDown as faThumbsDownRegular } from "@fortawesome/free-regular-svg-icons";
 
 export default function Meqaleler() {
-  const initialNewsList = [
-    { id: 1, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
-    { id: 2, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
-    { id: 3, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-    { id: 4, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
-    { id: 5, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
-    { id: 6, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-  ];
-
-  const [newsList, setNewsList] = useState(initialNewsList);
+  const [newsList, setNewsList] = useState([]);
   const [userVotes, setUserVotes] = useState({});
 
   useEffect(() => {
+    fetchNews();
     const storedVotes = JSON.parse(localStorage.getItem("userVotes")) || {};
     setUserVotes(storedVotes);
   }, []);
 
-  const handleVote = (id, type) => {
+  const fetchNews = async () => {
+    try {
+      const res = await fetch("/api/Novelty/getall");
+      const data = await res.json();
+      const mappedData = data.map(item => ({
+        id: item.id,
+        title: item.title,
+        content: item.content,
+        image: item.coverPhoto || CoverImage,
+        date: item.date || new Date().toISOString(),
+        views: item.views || 0,
+        likes: item.likes || 0,
+        dislikes: item.dislikes || 0
+      }));
+      setNewsList(mappedData);
+    } catch (err) {
+      console.error("Xəbərləri yükləmək alınmadı:", err);
+    }
+  };
+
+  const handleVote = async (id, type) => {
     const currentVote = userVotes[id];
 
-    const updatedNews = newsList.map(item => {
-      if (item.id === id) {
-        let newLikes = item.likes;
-        let newDislikes = item.dislikes;
+    let apiUrl = "";
+    if (type === "like") {
+      apiUrl = `/api/Novelty/like/${id}/${currentVote === "like" ? 0 : 1}`;
+    } else {
+      apiUrl = `/api/Novelty/dislike/${id}/${currentVote === "dislike" ? 0 : 1}`;
+    }
 
-        if (currentVote === type) {
-          if (type === "like" && newLikes > 0) newLikes -= 1;
-          if (type === "dislike" && newDislikes > 0) newDislikes -= 1;
-          return { ...item, likes: newLikes, dislikes: newDislikes };
-        }
+    try {
+      await fetch(apiUrl, { method: "POST" });
 
-        if (currentVote === "like" && newLikes > 0) newLikes -= 1;
-        if (currentVote === "dislike" && newDislikes > 0) newDislikes -= 1;
+      const updatedVotes = { ...userVotes };
+      if (currentVote === type) delete updatedVotes[id];
+      else updatedVotes[id] = type;
 
-        if (type === "like") newLikes += 1;
-        if (type === "dislike") newDislikes += 1;
+      setUserVotes(updatedVotes);
+      localStorage.setItem("userVotes", JSON.stringify(updatedVotes));
 
-        return { ...item, likes: newLikes, dislikes: newDislikes };
-      }
-      return item;
-    });
-
-    const updatedVotes = { ...userVotes };
-    if (currentVote === type) delete updatedVotes[id];
-    else updatedVotes[id] = type;
-
-    setNewsList(updatedNews);
-    setUserVotes(updatedVotes);
-    localStorage.setItem("userVotes", JSON.stringify(updatedVotes));
+      fetchNews(); // Yenidən yüklə ki like/dislike sayı güncəllənsin
+    } catch (err) {
+      console.error("Səs vermək alınmadı:", err);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -81,7 +85,6 @@ export default function Meqaleler() {
         }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
-
         <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 text-xs sm:text-sm text-gray-300 z-10">
           <Link to="/" className="hover:underline w-[56px] sm:w-full ">Ana səhifə</Link>
           <span>→</span>
@@ -89,7 +92,6 @@ export default function Meqaleler() {
           <span>→</span>
           <span className="text-white font-semibold">Məqalələr</span>
         </div>
-
         <h1 className="relative z-10 text-white text-3xl sm:text-4xl md:text-5xl font-bold text-center px-4">
           Məqalələr
         </h1>

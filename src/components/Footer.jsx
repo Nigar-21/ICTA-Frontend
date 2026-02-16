@@ -1,14 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../assets/icta-logo.png";
 
 export default function Footer() {
   const [openModal, setOpenModal] = useState(false);
+  const [footerData, setFooterData] = useState({
+    roomNo: "",
+    technicalPhone: "",
+    madeBy: "",
+  });
+ useEffect(() => {
+  fetch("https://localhost:7176/api/Footers/getFooter")
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Footer API error");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      setFooterData({
+        roomNo: data?.roomNo || "",
+        technicalPhone: data?.technicalPhone || "",
+        madeBy: data?.madeBy || "",
+      });
+    })
+    .catch((err) => {
+      console.error("Footer məlumatları alınmadı:", err);
+    });
+}, []);
+
 
   return (
     <footer className="bg-[#162556] text-white py-8 px-4 sm:py-10 sm:px-8 mt-auto relative">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center md:items-start justify-between gap-6 sm:gap-8">
-
-        {/* Logo */}
         <div className="flex items-center gap-4">
           <img
             src={Logo}
@@ -46,11 +69,18 @@ export default function Footer() {
                 002.25 3.15v3.6z"
               />
             </svg>
-            <span className="text-xs sm:text-sm font-medium">Bizimlə əlaqə</span>
+            <span className="text-xs sm:text-sm font-medium">
+              Bizimlə əlaqə
+            </span>
           </button>
 
           <button
-            onClick={() => window.open("https://tm.icta.az/projects/texniki_d-st-k/issues", "_blank")}
+            onClick={() =>
+              window.open(
+                "https://tm.icta.az/projects/texniki_d-st-k/issues",
+                "_blank"
+              )
+            }
             className="flex items-center gap-2 bg-white/10 border border-white/20 px-3 sm:px-4 py-2 rounded-full hover:bg-white/20 transition"
           >
             <svg
@@ -77,24 +107,27 @@ export default function Footer() {
                 0l3 3m-3-3h12"
               />
             </svg>
-            <span className="text-xs sm:text-sm font-medium">Texniki dəstək</span>
+            <span className="text-xs sm:text-sm font-medium">
+              Texniki dəstək
+            </span>
           </button>
         </div>
 
-        {/* Text */}
         <div className="text-center md:text-right max-w-[280px] text-sm sm:text-base text-gray-300 leading-relaxed">
           <p>
-            Bu səhifə <span className="font-semibold text-white">Şöbənin təcrübəçiləri</span> tərəfindən hazırlanmışdır.
+            Bu səhifə{" "}
+            <span className="font-semibold text-white">
+              {footerData.madeBy}
+            </span>{" "}
+            tərəfindən hazırlanmışdır.
           </p>
         </div>
       </div>
 
-      {/* Copyright */}
       <div className="mt-6 sm:mt-8 border-t border-gray-600 pt-3 sm:pt-4 text-center text-gray-400 text-xs sm:text-sm">
         © {new Date().getFullYear()} Bütün hüquqlar qorunur.
       </div>
 
-      {/* Modal */}
       {openModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white w-[90%] max-w-2xl rounded-xl shadow-2xl p-4 sm:p-6 relative">
@@ -121,29 +154,57 @@ export default function Footer() {
 
               <tbody>
                 <tr>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">Şöbə müdiri</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">Vüsal Əkbərli</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">vusal.akbarli@icta.az</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">511</td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    Şöbə müdiri
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    Vüsal Əkbərli
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    vusal.akbarli@icta.az
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    {footerData.technicalPhone}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">Şəbəkə inzibatçısı</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">Ehtiram Mustafayev</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">ehtiram.mustafayev@icta.az</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">513</td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    Şəbəkə inzibatçısı
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    Ehtiram Mustafayev
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    ehtiram.mustafayev@icta.az
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    {footerData.technicalPhone}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">İT mütəxəssisi</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">Cavid Həsənli</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">cavid.hasanli@icta.az</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">515</td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    İT mütəxəssisi
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    Cavid Həsənli
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    cavid.hasanli@icta.az
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    {footerData.technicalPhone}
+                  </td>
                 </tr>
 
                 <tr className="font-semibold bg-gray-100">
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2" colSpan={3}>Otaq nömrəsi</td>
-                  <td className="border px-2 py-1 sm:px-3 sm:py-2">208</td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2" colSpan={3}>
+                    Otaq nömrəsi
+                  </td>
+                  <td className="border px-2 py-1 sm:px-3 sm:py-2">
+                    {footerData.roomNo}
+                  </td>
                 </tr>
               </tbody>
             </table>

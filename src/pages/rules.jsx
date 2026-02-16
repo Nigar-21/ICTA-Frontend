@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import { Search, Download, ChevronDown } from "lucide-react";
 import Cover from "../assets/ITPhoto.png";
 
@@ -6,6 +8,27 @@ export default function Rules() {
   const [search, setSearch] = useState("");
   const [openItem, setOpenItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+  const [rules, setRules] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  axios.get("http://localhost:7176/api/BaseRules/getall")
+    .then(res => {
+      const mapped = res.data.map(item => ({
+        id: item.id,
+        title: item.title,
+        category: item.hashtags,
+        date: new Date(item.createdDate).toLocaleDateString(),
+        file: item.files?.[0] || "",
+        description: item.content
+      }));
+
+      setRules(mapped);
+    })
+    .catch(err => console.error("Rules API error:", err))
+    .finally(() => setLoading(false));
+}, []);
+
 
   const categories = [
     "Hamısı",
@@ -15,44 +38,44 @@ export default function Rules() {
     "İT Qaydaları",
   ];
 
-  const rules = [
-    {
-      id: 1,
-      title: "Müraciətlərin qəbulu və cavablandırılması qaydaları",
-      category: "Müraciət Qaydaları",
-      date: "12.03.2025",
-      file: "/rules/muraciet-qaydalari.pdf",
-      description:
-        "Vətəndaş müraciətlərinin qəbulu, yönləndirilməsi, cavablandırılması və müddətlərin qorunması ilə bağlı bütün tələbləri özündə birləşdirir.",
-    },
-    {
-      id: 2,
-      title: "İşçilərin daxili davranış və intizam qaydaları",
-      category: "Daxili Qaydalar",
-      date: "05.02.2025",
-      file: "/rules/daxili-intizam.pdf",
-      description:
-        "Bu sənəd əməkdaşların iş zamanı davranış normalarını, intizam tələblərini və məsuliyyətləri müəyyən edir.",
-    },
-    {
-      id: 3,
-      title: "Etik davranış kodeksi",
-      category: "Etik Davranış",
-      date: "01.01.2025",
-      file: "/rules/etik-kodeks.pdf",
-      description:
-        "Şirkət daxilində əməkdaşların etik, peşəkar və nümunəvi davranış etməsi üçün əsas prinsipləri müəyyən edir.",
-    },
-    {
-      id: 4,
-      title: "İT avadanlıqlarından istifadə qaydaları",
-      category: "İT Qaydaları",
-      date: "22.02.2025",
-      file: "/rules/it-istifade.pdf",
-      description:
-        "İş kompüterlərində təhlükəsizlik, şəbəkə istifadəsi, məlumatların qorunması və cihazlardan düzgün istifadə qaydaları.",
-    },
-  ];
+  // const rules = [
+  //   {
+  //     id: 1,
+  //     title: "Müraciətlərin qəbulu və cavablandırılması qaydaları",
+  //     category: "Müraciət Qaydaları",
+  //     date: "12.03.2025",
+  //     file: "/rules/muraciet-qaydalari.pdf",
+  //     description:
+  //       "Vətəndaş müraciətlərinin qəbulu, yönləndirilməsi, cavablandırılması və müddətlərin qorunması ilə bağlı bütün tələbləri özündə birləşdirir.",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "İşçilərin daxili davranış və intizam qaydaları",
+  //     category: "Daxili Qaydalar",
+  //     date: "05.02.2025",
+  //     file: "/rules/daxili-intizam.pdf",
+  //     description:
+  //       "Bu sənəd əməkdaşların iş zamanı davranış normalarını, intizam tələblərini və məsuliyyətləri müəyyən edir.",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Etik davranış kodeksi",
+  //     category: "Etik Davranış",
+  //     date: "01.01.2025",
+  //     file: "/rules/etik-kodeks.pdf",
+  //     description:
+  //       "Şirkət daxilində əməkdaşların etik, peşəkar və nümunəvi davranış etməsi üçün əsas prinsipləri müəyyən edir.",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "İT avadanlıqlarından istifadə qaydaları",
+  //     category: "İT Qaydaları",
+  //     date: "22.02.2025",
+  //     file: "/rules/it-istifade.pdf",
+  //     description:
+  //       "İş kompüterlərində təhlükəsizlik, şəbəkə istifadəsi, məlumatların qorunması və cihazlardan düzgün istifadə qaydaları.",
+  //   },
+  // ];
 
   const filteredRules = rules.filter(
     (item) =>

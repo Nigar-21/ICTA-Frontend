@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -7,38 +8,20 @@ import "slick-carousel/slick/slick-theme.css";
 import NewsImage from '../assets/download.jpeg'
 
 export default function News() {
-  const newsData = [
-    {
-      title: "Yeni IT qaydaları tətbiq edildi",
-      date: "05.10.2025",
-      image: NewsImage,
-      category: "Xəbər",
-    },
-    {
-      title: "Müraciət sistemində yeniliklər",
-      date: "04.10.2025",
-      image: NewsImage,
-      category: "Elan",
-    },
-    {
-      title: "Texniki təlimlər başladı",
-      date: "03.10.2025",
-      image: NewsImage,
-      category: "Məqalə",
-    },
-    {
-      title: "Yeni təhlükəsizlik siyasəti",
-      date: "02.10.2025",
-      image: NewsImage,
-      category: "Xəbər",
-    },
-    {
-      title: "Sistem yenilənməsi tamamlandı",
-      date: "01.10.2025",
-      image: NewsImage,
-      category: "Elan",
-    },
-  ];
+const [newsData, setNewsData] = useState([]);
+useEffect(() => {
+  const fetchNews = async () => {
+    try {
+      const res = await axios.get("http://localhost:7176/api/Novelty/getall");
+      setNewsData(res.data);
+    } catch (err) {
+      console.error("News API error:", err);
+    }
+  };
+
+  fetchNews();
+}, []);
+
 
   const NextArrow = (props) => {
     const { onClick } = props;
@@ -91,17 +74,19 @@ export default function News() {
       {newsData.slice(0, 10).map((item, index) => (
         <div key={index} className="px-2 sm:px-3">
           <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all sm:h-[330px] w-[80%] mx-auto  sm:w-[290px] duration-300">
-            <img
-              src={item.image}
-              alt={item.title}
-              className="w-full h-48 object-cover"
-            />
+          <img
+  src={`http://localhost:7176/${item.coverPhoto}`}
+  alt={item.title}
+  className="w-full h-48 object-cover"
+/>
             <div className="p-4">
-              <span className="text-sm text-gray-500">{item.date}</span>
+             <span className="text-sm text-gray-500">
+  {new Date(item.createdDate).toLocaleDateString()}
+</span>
               <h3 className="text-lg sm:text-xl font-semibold  text-[#1E3A8A] line-clamp-2">
                 {item.title}
               </h3>
-              <p className="text-sm text-gray-500 mt-1">{item.category}</p>
+             <p className="text-sm text-gray-500 mt-1">Xəbər</p>
             </div>
           </div>
         </div>

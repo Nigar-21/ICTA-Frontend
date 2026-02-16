@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import { Search, Download, ChevronDown } from "lucide-react";
 import Cover from "../assets/ITPhoto.png";
 
@@ -6,6 +8,29 @@ export default function ItRules() {
   const [search, setSearch] = useState("");
   const [openItem, setOpenItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+    const [itRules, setItRules] = useState([]);
+const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+  axios.get("http://localhost:7176/api/BaseRules/getall")
+    .then(res => {
+      const mapped = res.data
+        .filter(x => x.hashtags === "İT Qaydaları")
+        .map(item => ({
+          id: item.id,
+          title: item.title,
+          category: item.hashtags,
+          level: "High",  
+          date: new Date(item.createdDate).toLocaleDateString(),
+          file: item.files?.[0] || "",
+          description: item.content
+        }));
+
+      setItRules(mapped);
+    })
+    .finally(() => setLoading(false));
+}, []);
+
 
   const categories = [
     "Hamısı",
@@ -18,60 +43,60 @@ export default function ItRules() {
     "Backup siyasəti",
   ];
 
-  const rules = [
-    {
-      id: 1,
-      title: "Kompüter və avadanlıqların təhlükəsiz istifadəsi qaydaları",
-      category: "Avadanlıq istifadəsi",
-      level: "Medium",
-      date: "15.10.2025",
-      file: "/docs/avadanliq-istifade.pdf",
-      description:
-        "İşçilərin kompüter, printer, server və digər avadanlıqlardan təhlükəsiz istifadə qaydaları, cihazlara müdaxilə və düzgün baxım prinsipləri.",
-    },
-    {
-      id: 2,
-      title: "Şirkət daxili Wi-Fi və şəbəkə istifadəsi qaydaları",
-      category: "Şəbəkə",
-      level: "High",
-      date: "10.10.2025",
-      file: "/docs/wifi-policy.pdf",
-      description:
-        "Wi-Fi şifrələnməsi, VPN istifadəsi, şəbəkə resurslarına çıxış icazələri və təhlükəsizlik səviyyələri haqqında qaydalar.",
-    },
-    {
-      id: 3,
-      title: "Parol siyasəti və giriş təhlükəsizliyi",
-      category: "Parol siyasəti",
-      level: "High",
-      date: "02.09.2025",
-      file: "/docs/password-policy.pdf",
-      description:
-        "Şirkət sistemlərinə giriş üçün minimal parol tələbləri, iki mərhələli doğrulama, parolun dəyişmə müddəti və təhlükəsizlik tədbirləri.",
-    },
-    {
-      id: 4,
-      title: "Email və korporativ mesajlaşma qaydaları",
-      category: "Email siyasəti",
-      level: "Medium",
-      date: "22.08.2025",
-      file: "/docs/email-policy.pdf",
-      description:
-        "Email istifadə qaydaları, phishing hücumlarından qorunma, daxili məlumatların email ilə göndərilməsi üçün tələblər.",
-    },
-    {
-      id: 5,
-      title: "Backup və məlumatların bərpası siyasəti",
-      category: "Backup siyasəti",
-      level: "High",
-      date: "05.07.2025",
-      file: "/docs/backup-policy.pdf",
-      description:
-        "Server və işçi kompüterlərində məlumatların müntəzəm backup olunması, itki zamanı bərpa prosesləri və səlahiyyətlər.",
-    },
-  ];
+  // const rules = [
+  //   {
+  //     id: 1,
+  //     title: "Kompüter və avadanlıqların təhlükəsiz istifadəsi qaydaları",
+  //     category: "Avadanlıq istifadəsi",
+  //     level: "Medium",
+  //     date: "15.10.2025",
+  //     file: "/docs/avadanliq-istifade.pdf",
+  //     description:
+  //       "İşçilərin kompüter, printer, server və digər avadanlıqlardan təhlükəsiz istifadə qaydaları, cihazlara müdaxilə və düzgün baxım prinsipləri.",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Şirkət daxili Wi-Fi və şəbəkə istifadəsi qaydaları",
+  //     category: "Şəbəkə",
+  //     level: "High",
+  //     date: "10.10.2025",
+  //     file: "/docs/wifi-policy.pdf",
+  //     description:
+  //       "Wi-Fi şifrələnməsi, VPN istifadəsi, şəbəkə resurslarına çıxış icazələri və təhlükəsizlik səviyyələri haqqında qaydalar.",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Parol siyasəti və giriş təhlükəsizliyi",
+  //     category: "Parol siyasəti",
+  //     level: "High",
+  //     date: "02.09.2025",
+  //     file: "/docs/password-policy.pdf",
+  //     description:
+  //       "Şirkət sistemlərinə giriş üçün minimal parol tələbləri, iki mərhələli doğrulama, parolun dəyişmə müddəti və təhlükəsizlik tədbirləri.",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "Email və korporativ mesajlaşma qaydaları",
+  //     category: "Email siyasəti",
+  //     level: "Medium",
+  //     date: "22.08.2025",
+  //     file: "/docs/email-policy.pdf",
+  //     description:
+  //       "Email istifadə qaydaları, phishing hücumlarından qorunma, daxili məlumatların email ilə göndərilməsi üçün tələblər.",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "Backup və məlumatların bərpası siyasəti",
+  //     category: "Backup siyasəti",
+  //     level: "High",
+  //     date: "05.07.2025",
+  //     file: "/docs/backup-policy.pdf",
+  //     description:
+  //       "Server və işçi kompüterlərində məlumatların müntəzəm backup olunması, itki zamanı bərpa prosesləri və səlahiyyətlər.",
+  //   },
+  // ];
 
-  const filtered = rules.filter(
+  const filtered = itRules.filter(
     (rule) =>
       (selectedCategory === "Hamısı" || rule.category === selectedCategory) &&
       rule.title.toLowerCase().includes(search.toLowerCase())

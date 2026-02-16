@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState,useEffect  } from "react";
+import axios from "axios";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import { FaFilePdf, FaVideo, FaQuestionCircle, FaRegFileAlt, FaBook, FaLaptopCode } from "react-icons/fa"; 
@@ -51,23 +52,52 @@ export default function Main() {
     description: "İT istifadə qaydaları, təhlükəsizlik və daxili protokollar barədə tövsiyələr."
   },
 ];
+const [meetings, setMeetings] = useState([]);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState(null);
+const [inputValue, setInputValue] = useState("");
 
+useEffect(() => {
+  setLoading(true);
 
-  const meetings = [
-  { date: '2025-10-09', time: '06:00 - 07:00', place: 'Ofis' },
-  { date: '2025-10-09', time: '09:00 - 10:00', place: 'Ofis' },
-  { date: '2025-10-09', time: '11:00 - 12:00', place: 'Ofis' },
-   { date: '2025-10-09', time: '13:00 - 14:00', place: 'Ofis' },
-  { date: '2025-10-10', time: '10:00 - 11:00', place: 'Ofis' },
-  { date: '2025-10-10', time: '13:00 - 14:00', place: 'Ofis' },
-];
+  axios
+    .get("http://localhost:7176/api/Meetings/getall")
+    .then((res) => {
+      const formatted = res.data.map((m) => ({
+        id: m.id,
+        title: m.title,
+        date: m.startDate?.split("T")[0],
+        startTime: m.startTime,
+        endTime: m.endTime,
+        time: `${m.startTime} - ${m.endTime}`,
+        place: m.location,
+        note: m.description,
+      }));
+
+      setMeetings(formatted);
+    })
+    .catch((err) => {
+      console.error("Meetings API error:", err);
+      setError("Serverə qoşulmaq mümkün olmadı");
+    })
+    .finally(() => setLoading(false));
+}, []);
+
+const handleFilter = () => {
+  return meetings.filter(m =>
+    m.place?.toLowerCase().includes(inputValue.toLowerCase()) ||
+    m.note?.toLowerCase().includes(inputValue.toLowerCase()) ||
+    m.title?.toLowerCase().includes(inputValue.toLowerCase())
+  );
+};
+
 
 
    const [selectedDate, setSelectedDate] = useState(new Date());
 
 
 
-const filteredMeetings = meetings
+const filteredMeetings = handleFilter()
   .filter(m => {
     const meetingDate = new Date(m.date);
     return (
@@ -77,13 +107,16 @@ const filteredMeetings = meetings
     );
   })
   .sort((a, b) => {
-    const hourA = parseInt(a.time.split(':')[0], 10);
-    const hourB = parseInt(b.time.split(':')[0], 10);
-    return hourA - hourB;
+ const toMinutes = (t) => {
+  if (!t) return 0;
+  const parts = t.split(":");
+  return Number(parts[0]) * 60 + Number(parts[1]);
+};
+
+    return toMinutes(a.startTime) - toMinutes(b.startTime);
   })
   .slice(0, 3)
   .map((m, idx) => ({ ...m, title: `Görüş ${idx + 1}` }));
-
 
 
   
@@ -102,11 +135,11 @@ const filteredMeetings = meetings
           <div className="w-[80%] sm:w-[40%] items-center justify-between rounded-full border border-[#D4D4D4] hover:border-[#92B5F6] flex h-[36px] sm:h-[48px] px-4 sm:px-6">
             <input
               onChange={(e) => setInputValue(e?.target?.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleFilter();
-                }
-              }}
+              // onKeyDown={(e) => {
+              //   if (e.key === 'Enter') {
+              //     handleFilter();
+              //   }
+              // }}
               type="text"
               placeholder="Axtar"
               className=" w-full bg-transparent text-sm sm:text-base text-[#1A1A1A] placeholder-[#9C9C9C] outline-none"
@@ -159,6 +192,8 @@ const filteredMeetings = meetings
 </section>
 
 {/* Calendar Section */}
+{loading && <p className="text-center text-gray-500">Yüklənir...</p>}
+{error && <p className="text-center text-red-500">{error}</p>}
 <section className="bg-white p-6 sm:p-20 rounded-2xl w-full  sm:w-[83%] mx-auto flex flex-col sm:flex-row justify-center gap-6 sm:gap-14">
   
   <div className=" sm:w-auto">
@@ -202,6 +237,12 @@ const filteredMeetings = meetings
         </button>
       </div>
     )}
+    {filteredMeetings.length === 0 && !loading && (
+  <p className="text-gray-400 text-center">
+    Bu tarix üçün görüş tapılmadı
+  </p>
+)}
+
 
   </div>
 </section>

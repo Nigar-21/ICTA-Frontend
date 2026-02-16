@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import { Search, Download, ChevronDown } from "lucide-react";
 import Cover from "../assets/ITPhoto.png";
 
@@ -6,6 +8,26 @@ export default function Policies() {
   const [search, setSearch] = useState("");
   const [openItem, setOpenItem] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Hamısı");
+  const [policies, setPolicies] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  axios.get("http://localhost:7176/api/BaseRules/getall")
+    .then(res => {
+      const mapped = res.data.map(item => ({
+        id: item.id,
+        title: item.title,
+        category: item.hashtags,
+        date: new Date(item.createdDate).toLocaleDateString(),
+        file: item.files?.[0] || "",
+        description: item.content
+      }));
+
+      setPolicies(mapped);
+    })
+    .catch(err => console.error("Policies API error:", err))
+    .finally(() => setLoading(false));
+}, []);
 
   const categories = [
     "Hamısı",
@@ -16,37 +38,37 @@ export default function Policies() {
     "Maliyyə və Hesabatlıq",
   ];
 
-  const documents = [
-    {
-      id: 1,
-      title: "Məlumatların məxfiliyi və qorunması siyasəti",
-      category: "Məlumatların qorunması",
-      date: "12.01.2025",
-      file: "/docs/mezfiliyyet.pdf",
-      description:
-        "Bu sənəd təşkilat daxilində şəxsi məlumatların necə qorunduğunu, saxlanıldığını və emal olunduğunu izah edir.",
-    },
-    {
-      id: 2,
-      title: "İnformasiya Texnologiyaları Təhlükəsizlik Siyasəti",
-      category: "İT siyasətləri",
-      date: "24.02.2025",
-      file: "/docs/it-tehlukesizlik.pdf",
-      description:
-        "Siyasət informasiya sistemlərində təhlükəsizlik qaydalarını və istifadəçi məsuliyyətlərini müəyyən edir.",
-    },
-    {
-      id: 3,
-      title: "İnsan Resursları İş Prinsipləri",
-      category: "İnsan Resursları",
-      date: "10.03.2024",
-      file: "/docs/hr-prinsipler.pdf",
-      description:
-        "Bu siyasət əməkdaşların iş qaydalarını, etik davranış normalarını və daxili prosedurları əhatə edir.",
-    },
-  ];
+  // const documents = [
+  //   {
+  //     id: 1,
+  //     title: "Məlumatların məxfiliyi və qorunması siyasəti",
+  //     category: "Məlumatların qorunması",
+  //     date: "12.01.2025",
+  //     file: "/docs/mezfiliyyet.pdf",
+  //     description:
+  //       "Bu sənəd təşkilat daxilində şəxsi məlumatların necə qorunduğunu, saxlanıldığını və emal olunduğunu izah edir.",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "İnformasiya Texnologiyaları Təhlükəsizlik Siyasəti",
+  //     category: "İT siyasətləri",
+  //     date: "24.02.2025",
+  //     file: "/docs/it-tehlukesizlik.pdf",
+  //     description:
+  //       "Siyasət informasiya sistemlərində təhlükəsizlik qaydalarını və istifadəçi məsuliyyətlərini müəyyən edir.",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "İnsan Resursları İş Prinsipləri",
+  //     category: "İnsan Resursları",
+  //     date: "10.03.2024",
+  //     file: "/docs/hr-prinsipler.pdf",
+  //     description:
+  //       "Bu siyasət əməkdaşların iş qaydalarını, etik davranış normalarını və daxili prosedurları əhatə edir.",
+  //   },
+  // ];
 
-  const filteredDocs = documents.filter(
+  const filteredDocs = policies.filter(
     (doc) =>
       (selectedCategory === "Hamısı" || doc.category === selectedCategory) &&
       doc.title.toLowerCase().includes(search.toLowerCase())

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ServerImage from "../assets/ITPhoto.png";
+import axios from "axios";
 import SobeImage from "../assets/data.jpg";
 import EsasnameImage from "../assets/ai.jpg";
 import StrukturImage from "../assets/comp.jpg";
@@ -7,6 +8,16 @@ import MuracietImage from "../assets/network.jpg";
 
 export default function About() {
   const [activeTab, setActiveTab] = useState("sobe");
+  const [regulations, setRegulations] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/api/Regulations/getRegulations")
+      .then((res) => {
+        setRegulations(res.data.data || []);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   const tabs = [
     { name: "Şöbə haqqında", key: "sobe" },
@@ -15,20 +26,32 @@ export default function About() {
   ];
 
   const renderContent = () => {
+    if (!regulations.length) return <p>Yüklənir...</p>;
+
+    const tabIdMap = {
+      sobe: 1,
+      esasname: 2,
+      struktur: 3,
+    };
+
+    const reg = regulations.find((r) => r.id === tabIdMap[activeTab]);
+
     switch (activeTab) {
       case "sobe":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <img
-              src={SobeImage}
+              src={reg?.photo || SobeImage}
               alt="Şöbə"
               className="w-full md:w-[90%] h-[250px] md:h-[500px] object-cover rounded-2xl shadow-md"
             />
             <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-4">Şöbə haqqında məlumat</h2>
-              <p>- Şöbənin yaranma tarixi: 2010</p>
-              <p>- Görülən işlər: İT infrastrukturu, texniki dəstək, sistemlərin idarəsi</p>
-              <p>- Əlavə məlumat: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <h2 className="text-xl md:text-2xl font-bold mb-4">
+                {reg?.title || "Şöbə haqqında məlumat"}
+              </h2>
+              <p>
+                {reg?.description || "- Şöbə haqqında əlavə məlumat yoxdur."}
+              </p>
             </div>
           </div>
         );
@@ -37,14 +60,28 @@ export default function About() {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <img
-              src={EsasnameImage}
+              src={reg?.photo || EsasnameImage}
               alt="Əsasnamə"
               className="w-full md:w-[90%] h-[250px] md:h-[500px] object-cover rounded-2xl shadow-md"
             />
             <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-4">Əsasnamə</h2>
-              <p>- Əsasnamənin yazı forması və təsdiqi</p>
-              <p>- Təsdiq tarixi: 01.01.2025</p>
+              <h2 className="text-xl md:text-2xl font-bold mb-4">
+                {reg?.title || "Əsasnamə"}
+              </h2>
+              <p>{reg?.description || "- Əsasnamə haqqında məlumat yoxdur."}</p>
+              {reg?.file && (
+                <a
+                  href={reg.file}
+                  download
+                  className="inline-block mt-4 px-4 py-2 text-white font-semibold rounded-2xl shadow-lg transition"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, #162556 0%, #2c3a7b 50%, #3b446f 100%)",
+                  }}
+                >
+                  Sənəd yüklə
+                </a>
+              )}
             </div>
           </div>
         );
@@ -53,13 +90,28 @@ export default function About() {
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <img
-              src={StrukturImage}
+              src={reg?.photo || StrukturImage}
               alt="Struktur"
               className="w-full md:w-[90%] h-[250px] md:h-[500px] object-cover rounded-2xl shadow-md"
             />
             <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-4">Şöbənin strukturu</h2>
-              <p>- Struktur təsdiq tarixi: 05.05.2025</p>
+              <h2 className="text-xl md:text-2xl font-bold mb-4">
+                {reg?.title || "Struktur"}
+              </h2>
+              <p>{reg?.description || "- Struktur haqqında məlumat yoxdur."}</p>
+              {reg?.file && (
+                <a
+                  href={reg.file}
+                  download
+                  className="inline-block mt-4 px-4 py-2 text-white font-semibold rounded-2xl shadow-lg transition"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, #162556 0%, #2c3a7b 50%, #3b446f 100%)",
+                  }}
+                >
+                  Sənəd yüklə
+                </a>
+              )}
             </div>
           </div>
         );
@@ -72,11 +124,8 @@ export default function About() {
   return (
     <div className="bg-white min-h-screen py-20 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
-
-        {/* Tab content */}
         {renderContent()}
 
-        {/* Tab düymələri */}
         <div className="flex flex-wrap gap-2 md:gap-4 mt-10 justify-start sm:justify-end">
           {tabs.map((tab) => (
             <button
@@ -92,7 +141,6 @@ export default function About() {
             </button>
           ))}
         </div>
-
       </div>
     </div>
   );

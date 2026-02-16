@@ -1,28 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom"; 
+import { UserContext } from '../UserContext';
 import Logo from '../assets/icta-logo.png';
 import { FaUserCircle,FaUser, FaSignOutAlt,FaBars } from 'react-icons/fa';
 import { FiPhone, FiCalendar, FiX } from 'react-icons/fi';
 
 export default function Header() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+
 
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showCalendarText, setShowCalendarText] = useState(false);
   const [showContactText, setShowContactText] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+const { user, setUser } = useContext(UserContext);
 
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    if (storedUser) setUser(storedUser);
-  }, []);
+useEffect(() => {
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    navigate("/");
-  };
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    try {
+      setUser(JSON.parse(storedUser));
+    } catch (err) {
+      console.error("User parsing error:", err);
+      setUser(null);
+    }
+  }
+}, []);
+
+const handleLogout = () => {
+  localStorage.removeItem("user"); 
+  setUser(null); 
+  navigate("/"); 
+};
+
 
   // BODY SCROLL-u blokla hamburger açılanda
   useEffect(() => {
@@ -136,30 +147,31 @@ export default function Header() {
             )}
           </div>
 
-          {user ? (
-            <div className="relative" onMouseEnter={() => setShowProfileMenu(true)} onMouseLeave={() => setShowProfileMenu(false)}>
-              <button className="p-2 rounded-full hover:bg-[#1E3A8A] transition duration-200 text-white text-2xl">
-                <FaUserCircle />
-              </button>
-              {showProfileMenu && (
-                <div className="absolute right-0 top-full mt-2 w-48 z-30">
-                  <DropdownArrow />
-                  <div className="bg-white text-gray-700 rounded-xl shadow-2xl overflow-hidden">
-                    <button onClick={() => navigate("/user")} className="flex items-center gap-3 w-full text-left px-4 py-2 text-gray-700 hover:bg-[#1E3A8A] hover:text-white transition-colors duration-200 text-[16px] font-semibold">
-                      <FaUser className="text-xl" /> Profilim
-                    </button>
-                    <button onClick={handleLogout} className="flex items-center gap-3 w-full text-left px-4 py-2 text-gray-700 hover:bg-[#1E3A8A] hover:text-white transition-colors duration-200 text-[16px] font-semibold">
-                      <FaSignOutAlt className="text-xl" /> Hesabdan çıxış
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button onClick={() => navigate("/auth")} className='text-white border rounded-full font-semibold border-[#1E3A8A] bg-[#1E3A8A] hover:bg-[#17275B] hover:border-[#17275B] py-2 px-6 text-[16px] transition-all duration-200'>
-              Daxil ol
-            </button>
-          )}
+        {user ? (
+  <div className="relative" onMouseEnter={() => setShowProfileMenu(true)} onMouseLeave={() => setShowProfileMenu(false)}>
+    <button className="p-2 rounded-full hover:bg-[#1E3A8A] transition duration-200 text-white text-2xl">
+      <FaUserCircle />
+    </button>
+    {showProfileMenu && (
+      <div className="absolute right-0 top-full mt-2 w-48 z-30">
+        <DropdownArrow />
+        <div className="bg-white text-gray-700 rounded-xl shadow-2xl overflow-hidden">
+          <button onClick={() => navigate("/user")} className="flex items-center gap-3 w-full text-left px-4 py-2 hover:bg-[#1E3A8A] hover:text-white text-[16px] font-semibold">
+            <FaUser className="text-xl" /> Profilim
+          </button>
+          <button onClick={handleLogout} className="flex items-center gap-3 w-full text-left px-4 py-2 hover:bg-[#1E3A8A] hover:text-white text-[16px] font-semibold">
+            <FaSignOutAlt className="text-xl" /> Hesabdan çıxış
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+) : (
+  <button onClick={() => navigate("/auth")} className="text-white border rounded-full font-semibold border-[#1E3A8A] bg-[#1E3A8A] hover:bg-[#17275B] hover:border-[#17275B] py-2 px-6 text-[16px] transition-all duration-200">
+    Daxil ol
+  </button>
+)}
+
         </div>
       </div>
 

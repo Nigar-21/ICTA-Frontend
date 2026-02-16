@@ -1,21 +1,32 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import CoverImage from "../assets/ITPhoto.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp as faThumbsUpSolid, faThumbsDown as faThumbsDownSolid } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsUp as faThumbsUpRegular, faThumbsDown as faThumbsDownRegular } from "@fortawesome/free-regular-svg-icons";
+import {
+  faThumbsUp as faThumbsUpSolid,
+  faThumbsDown as faThumbsDownSolid,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faThumbsUp as faThumbsUpRegular,
+  faThumbsDown as faThumbsDownRegular,
+} from "@fortawesome/free-regular-svg-icons";
 
 export default function Elanlar() {
-  const initialNewsList = [
-    { id: 1, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
-    { id: 2, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
-    { id: 3, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-    { id: 4, title: "Yeni IT qaydaları tətbiq edildi", date: "2025-10-05", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", image: CoverImage, views: 120, likes: 15, dislikes: 2 },
-    { id: 5, title: "Sistem yeniləndi", date: "2025-10-03", content: "Sistemdə yeni funksiyalar əlavə edildi və performans artırıldı.", image: CoverImage, views: 85, likes: 10, dislikes: 1 },
-    { id: 6, title: "İclas keçirildi", date: "2025-10-01", content: "Əsas mövzular, qərarlar və gələcək planlar iclasda müzakirə olundu.", image: CoverImage, views: 63, likes: 8, dislikes: 0 },
-  ];
+  const [newsList, setNewsList] = useState([]);
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await axios.get("http://localhost:7176/api/Novelty/getall");
+        setNewsList(res.data);
+      } catch (err) {
+        console.error("Novelty API error:", err);
+      }
+    };
 
-  const [newsList, setNewsList] = useState(initialNewsList);
+    fetchNews();
+  }, []);
+
   const [userVotes, setUserVotes] = useState({});
 
   useEffect(() => {
@@ -26,7 +37,7 @@ export default function Elanlar() {
   const handleVote = (id, type) => {
     const currentVote = userVotes[id];
 
-    const updatedNews = newsList.map(item => {
+    const updatedNews = newsList.map((item) => {
       if (item.id === id) {
         let newLikes = item.likes;
         let newDislikes = item.dislikes;
@@ -66,7 +77,11 @@ export default function Elanlar() {
     if (newsDate.toDateString() === today.toDateString()) return "Bugün";
     if (newsDate.toDateString() === yesterday.toDateString()) return "Dünən";
 
-    return newsDate.toLocaleDateString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return newsDate.toLocaleDateString("az-AZ", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
 
   return (
@@ -76,15 +91,19 @@ export default function Elanlar() {
         className="relative w-full h-[250px] sm:h-[400px] flex flex-col items-center justify-center"
         style={{
           backgroundImage: `url(${CoverImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 text-xs sm:text-sm text-gray-300 z-10">
-          <Link to="/" className="hover:underline">Ana səhifə</Link>
+          <Link to="/" className="hover:underline">
+            Ana səhifə
+          </Link>
           <span>→</span>
-          <Link to="/news" className="hover:underline">Yeniliklər</Link>
+          <Link to="/news" className="hover:underline">
+            Yeniliklər
+          </Link>
           <span>→</span>
           <span className="text-white font-semibold">Elanlar</span>
         </div>
@@ -95,37 +114,63 @@ export default function Elanlar() {
 
       {/* Content Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 sm:py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-        {newsList.map(item => (
-          <div key={item.id} className="bg-white rounded-2xl shadow hover:shadow-xl transition flex flex-col overflow-hidden">
-            <div className="w-full h-[200px] sm:h-[250px] bg-cover bg-center" style={{ backgroundImage: `url(${item.image})` }}></div>
+        {newsList.map((item) => (
+          <div
+            key={item.id}
+            className="bg-white rounded-2xl shadow hover:shadow-xl transition flex flex-col overflow-hidden"
+          >
+            <div className="w-full h-[200px] sm:h-[250px] bg-cover bg-center">
+              <img
+                src={`http://localhost:7176/${item.coverPhoto}`}
+                alt={item.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div className="p-4 flex flex-col flex-1">
               <div className="flex justify-between text-sm text-gray-500 mb-2">
-                <span>{formatDate(item.date)}</span>
-                <span>{item.views} baxış</span>
+                <span>
+                  {new Date(item.createdDate).toLocaleDateString("az-AZ")}
+                </span>
+                <span>{item.viewCount} baxış</span>
               </div>
-              <h3 className="text-lg font-semibold text-[#1E3A8A] mb-2">{item.title}</h3>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-3">{item.content}</p>
+              <h3 className="text-lg font-semibold text-[#1E3A8A] mb-2">
+                {item.title}
+              </h3>
+              <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                {item.content}
+              </p>
 
               <div className="mt-auto flex justify-between items-center">
                 <div className="flex space-x-4 items-center text-gray-700">
                   <div className="flex items-center space-x-1">
                     <button onClick={() => handleVote(item.id, "like")}>
                       <FontAwesomeIcon
-                        icon={userVotes[item.id] === "like" ? faThumbsUpSolid : faThumbsUpRegular}
+                        icon={
+                          userVotes[item.id] === "like"
+                            ? faThumbsUpSolid
+                            : faThumbsUpRegular
+                        }
                       />
                     </button>
-                    <span>{item.likes}</span>
+                    <span>{item.likeCount}</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <button onClick={() => handleVote(item.id, "dislike")}>
                       <FontAwesomeIcon
-                        icon={userVotes[item.id] === "dislike" ? faThumbsDownSolid : faThumbsDownRegular}
+                        icon={
+                          userVotes[item.id] === "dislike"
+                            ? faThumbsDownSolid
+                            : faThumbsDownRegular
+                        }
                       />
                     </button>
-                    <span>{item.dislikes}</span>
+                    <span>{item.dislikeCount}</span>
                   </div>
                 </div>
-                <Link to={`/elanlar/${item.id}`} className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition text-xs sm:text-sm">
+                <Link
+                  to={`/elanlar/${item.id}`}
+                  className="px-4 py-2 bg-[#1E3A8A] text-white rounded-full hover:bg-[#17275B] transition text-xs sm:text-sm"
+                >
                   Tam bax
                 </Link>
               </div>
